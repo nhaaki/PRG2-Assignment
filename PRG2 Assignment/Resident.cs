@@ -33,6 +33,8 @@ namespace PRG2_Assignment
         { 
             Address = a;
             LastLeftCountry = llc;
+            SafeEntryList = new List<SafeEntry>();
+            TravelEntryList = new List<TravelEntry>();
         }
     }
 }

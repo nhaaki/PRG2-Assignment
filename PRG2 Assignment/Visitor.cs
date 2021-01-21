@@ -26,6 +26,8 @@ namespace PRG2_Assignment
         {
             PassportNo = pn;
             Nationality = na;
+            SafeEntryList = new List<SafeEntry>();
+            TravelEntryList = new List<TravelEntry>();
         }
 
 
