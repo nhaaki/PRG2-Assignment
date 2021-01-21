@@ -15,6 +15,20 @@ namespace PRG2_Assignment
 
         public List<SafeEntry> SafeEntryList { get; set; }
 
+        public List<TravelEntry> TravelEntryList { get; set; }
 
+        public Person() { SafeEntryList = new List<SafeEntry>(); TravelEntryList = new List<TravelEntry>(); }
+
+        public Person(string n)
+        {
+            Name = n;
+            SafeEntryList = new List<SafeEntry>();
+            TravelEntryList = new List<TravelEntry>();
+        }
+
+        public void AddTravelEntry(TravelEntry travelEntry)
+        {
+            TravelEntryList.Add(travelEntry);
+        }
     }
 }

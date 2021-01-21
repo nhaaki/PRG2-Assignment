@@ -14,5 +14,24 @@ namespace PRG2_Assignment
             set { checkIn = value; }
         }
 
+        private DateTime checkOut;
+
+        public DateTime CheckOut
+        {
+            get { return CheckOut; }
+            set { CheckOut = value; }
+        }
+
+
+        public BusinessLocation Location { get; set; }
+
+        public SafeEntry() { }
+
+        public SafeEntry(DateTime ci, BusinessLocation l)
+        {
+            CheckIn = ci;
+            Location = l;
+        }
+
     }
 }
