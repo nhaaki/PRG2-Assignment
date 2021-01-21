@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PRG2_Assignment
 {
-    class Person
+    abstract class Person
     {
         private string name;
         public string Name
@@ -13,6 +13,8 @@ namespace PRG2_Assignment
             set { name = value; }
         }
 
-        
+        public List<SafeEntry> SafeEntryList { get; set; }
+
+
     }
 }
