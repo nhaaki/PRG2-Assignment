@@ -17,8 +17,22 @@ namespace PRG2_Assignment
             string[] BusinessLines = File.ReadAllLines("BusinessLocation.csv");
 
             List<API> apidata = LoadAPI();
+            
+            while (true)
+            {
+                int input = DisplayMenu();
 
-            ListVisitors(personLines);
+                if (input == 0)
+                {
+                    return;
+                }
+                if (input == 1)
+                {
+                    ListVisitors(personLines);
+                }
+                
+            }
+            
 
 
 
@@ -52,6 +66,7 @@ namespace PRG2_Assignment
 
         static void ListVisitors(string[] lines)
         {
+            Console.WriteLine();
             Console.WriteLine("Visitors");
             Console.WriteLine("--------");
             for (int i = 1; i < lines.Length; i++)
@@ -66,6 +81,23 @@ namespace PRG2_Assignment
             }
         }
 
+        static int DisplayMenu()
+        {
+            Console.WriteLine("=========================");
+            Console.WriteLine("Main   monitoring   menu");
+            Console.WriteLine("=========================");
+            Console.WriteLine();
+            List<string> choice = new List<string>() { "Display all visitors" };
+            
+            for (int x=0; x<choice.Count; x++){
+                Console.WriteLine("({0}) {1}", x+1, choice[x]);
+            }
+            Console.Write("Enter choice: ");
+            int input = Convert.ToInt32(Console.ReadLine());
+
+            return input;
+            
+        }
         
 
     }
