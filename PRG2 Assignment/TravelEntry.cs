@@ -71,7 +71,30 @@ namespace PRG2_Assignment
 
         public void AssignSHNFacility(SHNFacility x)
         {
+            shnStay = x;
+        }
 
+        public void CalculateSHNDuration()
+        {
+            if (lastCountryOfEmbarkation == "New Zealand" | lastCountryOfEmbarkation == "Veitnam")
+            {
+                shnEndDate = entrydate.AddDays(0);
+            }
+            else if (lastCountryOfEmbarkation == "Macao SAR")
+            {
+                shnEndDate = entrydate.AddDays(7);
+            }
+            else
+            {
+                shnEndDate = entrydate.AddDays(14);
+            }
+
+        }
+
+
+        public override string ToString()
+        {
+            return "Last Country Visited: " + lastCountryOfEmbarkation + " Entry Mode: " + entryMode + " SHN Entry Date: " + entryDate + " SHN End Date: " + shnEndDate + " SHN Stay: " + shnStay + " Is Paid: " + isPaid;
         }
     }
 }
