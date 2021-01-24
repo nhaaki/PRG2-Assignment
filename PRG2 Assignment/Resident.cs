@@ -55,5 +55,10 @@ namespace PRG2_Assignment
                 return 200 + 20 + 1000;
             }
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\nAddress: " + Address + "\nLast left country: " + LastLeftCountry.ToString("dd/MM/yyyy");
+        }
     }
 }

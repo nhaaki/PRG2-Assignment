@@ -33,6 +33,11 @@ namespace PRG2_Assignment
 
         public abstract double CalculateSHNCharges();
 
+        public override string ToString()
+        {
+            return "Name: " + Name;
+        }
+
 
     }
 }

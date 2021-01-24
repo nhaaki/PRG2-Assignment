@@ -45,6 +45,11 @@ namespace PRG2_Assignment
             }
         }
 
+        public override string ToString()
+        {
+            return base.ToString() + "\nPassport Number: " + PassportNo + "\nNationality: " + Nationality;
+        }
+
 
     }
 }

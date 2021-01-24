@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace PRG2_Assignment
 {
@@ -27,7 +28,7 @@ namespace PRG2_Assignment
 
 
 
-                while (true)
+            while (true)
             {
                 int input = DisplayMenu();
 
@@ -35,16 +36,18 @@ namespace PRG2_Assignment
                 {
                     return;
                 }
-                if (input == 1)
+                else if (input == 1)
                 {
                     ListVisitors(personLines);
                 }
-                
+                else if (input == 2)
+                {
+                    Console.WriteLine();
+                    Console.Write("Enter name of person: ");
+                    string name = Console.ReadLine();
+                    ListPersonDetails(name, personLines);
+                }
             }
-            
-
-
-
         }
 
         
@@ -90,16 +93,48 @@ namespace PRG2_Assignment
             }
         }
 
+        static void ListPersonDetails(string name, string[] personLines)
+        {
+            List<Person> personList = new List<Person>() { };
+            for (int i = 1; i < personLines.Length; i++)
+            {
+                string[] data = personLines[i].Split(',');
+                if (data[0] == "resident")
+                {
+                    if (data[6] != "")
+                    {
+                        Resident res = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                        res.Token = new TraceTogetherToken(data[6], data[7], DateTime.Parse(data[8]));
+                    }
+                    Resident newres = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                    personList.Add(newres);
+                }
+                else if (data[0] == "visitor")
+                {
+                    Visitor newvis = new Visitor(data[1], data[4], data[5]);
+                    personList.Add(newvis);
+                }
+            }
+
+            foreach (Person x in personList)
+            {
+                if (x.Name == name)
+                {
+                    Console.WriteLine(x.ToString());
+                }
+            }
+        }
+
         static int DisplayMenu()
         {
             Console.WriteLine("=========================");
             Console.WriteLine("Main   monitoring   menu");
             Console.WriteLine("=========================");
             Console.WriteLine();
-            List<string> choice = new List<string>() { "Display all visitors" };
+            List<string> choice = new List<string>() { "Exit the application", "Display all visitors" };
             
             for (int x=0; x<choice.Count; x++){
-                Console.WriteLine("({0}) {1}", x+1, choice[x]);
+                Console.WriteLine("({0}) {1}", x, choice[x]);
             }
             Console.Write("Enter choice: ");
             int input = Convert.ToInt32(Console.ReadLine());
