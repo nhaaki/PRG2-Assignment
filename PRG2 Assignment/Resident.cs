@@ -36,5 +36,24 @@ namespace PRG2_Assignment
             SafeEntryList = new List<SafeEntry>();
             TravelEntryList = new List<TravelEntry>();
         }
+
+        public override double CalculateSHNCharges()
+        {
+            TravelEntry lastTravelEntry = TravelEntryList[TravelEntryList.Count - 1];
+
+
+            if (lastTravelEntry.lastCountryOfEmbarkation == "Veitnam" | lastTravelEntry.lastCountryOfEmbarkation == "New Zeland")
+            {
+                return 200;
+            }
+            else if(lastTravelEntry.lastCountryOfEmbarkation == "Macao SAR")
+            {
+                return 200 + 20;
+            }
+            else
+            {
+                return 200 + 20 + 1000;
+            }
+        }
     }
 }

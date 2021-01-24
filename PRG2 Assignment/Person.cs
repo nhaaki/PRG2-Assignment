@@ -30,5 +30,9 @@ namespace PRG2_Assignment
         {
             TravelEntryList.Add(travelEntry);
         }
+
+        public abstract double CalculateSHNCharges();
+
+
     }
 }
