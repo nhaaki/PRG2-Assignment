@@ -17,8 +17,17 @@ namespace PRG2_Assignment
             string[] BusinessLines = File.ReadAllLines("BusinessLocation.csv");
 
             List<API> apidata = LoadAPI();
-            
-            while (true)
+
+            List<SHNFacility> shnList = new List<SHNFacility>();
+
+            for (int i = 1; i < apidata.Count; i++)
+            {
+                shnList.Add(new SHNFacility(apidata[i].facilityname, apidata[i].facilitycapacity, apidata[i].facilitycapacity, apidata[i].distFromAirCheckpoint, apidata[i].distFromSeaCheckpoint, apidata[i].distFromLandCheckpoint));
+            }
+
+
+
+                while (true)
             {
                 int input = DisplayMenu();
 
@@ -97,6 +106,15 @@ namespace PRG2_Assignment
 
             return input;
             
+        }
+
+        static void ListSHN(List<SHNFacility> list)
+        {
+            Console.WriteLine("{0,-40}{1,-40}{2,-40}{3,-40}{4,-40}{5,-40}", "Facility Name", "Facility Capacity", "Facility Vacnacy", "Distance From Air Checkpoint", "Distance From Sea Checkpoint", "Distance From Land Checkpoint");
+            for (int i = 1; i < list.Count; i++)
+            {
+                Console.WriteLine("{0,-40}{1,-40}{2,-40}{3,-40}{4,-40}{5,-40}", list[i].faclilityName, list[i].facilityCapacity, list[i].facilityVacancy, list[i].distFromAirCheckpoint, list[i].distFromSeaCheckpoint, list[i].distFromLandCheckpoint);
+            }
         }
         
 
