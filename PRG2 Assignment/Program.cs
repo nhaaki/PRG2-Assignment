@@ -131,7 +131,7 @@ namespace PRG2_Assignment
             Console.WriteLine("Main   monitoring   menu");
             Console.WriteLine("=========================");
             Console.WriteLine();
-            List<string> choice = new List<string>() { "Exit the application", "Display all visitors" };
+            List<string> choice = new List<string>() { "Exit the application", "Display all visitors", "Display details for a person" };
             
             for (int x=0; x<choice.Count; x++){
                 Console.WriteLine("({0}) {1}", x, choice[x]);
