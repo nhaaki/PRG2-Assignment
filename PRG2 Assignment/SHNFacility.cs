@@ -95,7 +95,7 @@ namespace PRG2_Assignment
 
         public bool IsAvailable()
         {
-            if(facilityCapacity > 0)
+            if(facilityVacancy > 0)
             {
                 return true;
             }
