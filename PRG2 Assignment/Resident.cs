@@ -42,17 +42,17 @@ namespace PRG2_Assignment
             TravelEntry lastTravelEntry = TravelEntryList[TravelEntryList.Count - 1];
 
 
-            if (lastTravelEntry.lastCountryOfEmbarkation == "Veitnam" | lastTravelEntry.lastCountryOfEmbarkation == "New Zeland")
+            if (lastTravelEntry.lastCountryOfEmbarkation == "Vietnam" | lastTravelEntry.lastCountryOfEmbarkation == "New Zealand")
             {
-                return 200;
+                return 200/100 * 107;
             }
             else if(lastTravelEntry.lastCountryOfEmbarkation == "Macao SAR")
             {
-                return 200 + 20;
+                return (200 + 20)/100 * 107;
             }
             else
             {
-                return 200 + 20 + 1000;
+                return (200 + 20 + 1000)/100 * 107;
             }
         }
 

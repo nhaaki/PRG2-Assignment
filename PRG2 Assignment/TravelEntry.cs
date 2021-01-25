@@ -34,8 +34,8 @@ namespace PRG2_Assignment
 
         public DateTime shnEndDate
         {
-            get { return shnEndDate; }
-            set { shnEndDate = value; }
+            get { return shnenddate; }
+            set { shnenddate = value; }
         }
 
 
@@ -74,19 +74,19 @@ namespace PRG2_Assignment
             shnStay = x;
         }
 
-        public void CalculateSHNDuration()
+        public int CalculateSHNDuration()
         {
-            if (lastCountryOfEmbarkation == "New Zealand" | lastCountryOfEmbarkation == "Veitnam")
+            if (lastCountryOfEmbarkation == "New Zealand" | lastCountryOfEmbarkation == "Vietnam")
             {
-                shnEndDate = entrydate.AddDays(0);
+                return 0;
             }
             else if (lastCountryOfEmbarkation == "Macao SAR")
             {
-                shnEndDate = entrydate.AddDays(7);
+                return 7;
             }
             else
             {
-                shnEndDate = entrydate.AddDays(14);
+                return 14;
             }
 
         }

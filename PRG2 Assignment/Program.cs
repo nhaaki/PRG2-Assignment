@@ -18,10 +18,12 @@ namespace PRG2_Assignment
             string[] BusinessLines = File.ReadAllLines("BusinessLocation.csv");
 
             List<API> apidata = LoadAPI();
+            
+            List<Person> personList = LoadPerson(personLines);
 
             List<SHNFacility> shnList = new List<SHNFacility>();
 
-            for (int i = 1; i < apidata.Count; i++)
+            for (int i = 0; i < apidata.Count; i++)
             {
                 shnList.Add(new SHNFacility(apidata[i].facilityname, apidata[i].facilitycapacity, apidata[i].facilitycapacity, apidata[i].distFromAirCheckpoint, apidata[i].distFromSeaCheckpoint, apidata[i].distFromLandCheckpoint));
             }
@@ -38,14 +40,18 @@ namespace PRG2_Assignment
                 }
                 else if (input == 1)
                 {
-                    ListVisitors(personLines);
+                    ListVisitors(personList);
                 }
                 else if (input == 2)
                 {
                     Console.WriteLine();
                     Console.Write("Enter name of person: ");
                     string name = Console.ReadLine();
-                    ListPersonDetails(name, personLines);
+                    ListPersonDetails(name, personList);
+                }
+                else if (input == 3)
+                {
+                   CreateVisitor(personList);
                 }
             }
         }
@@ -76,24 +82,24 @@ namespace PRG2_Assignment
             }
         }
 
-        static void ListVisitors(string[] lines)
+        static void ListVisitors(List<Person> personList)
         {
             Console.WriteLine();
             Console.WriteLine("Visitors");
             Console.WriteLine("--------");
-            for (int i = 1; i < lines.Length; i++)
+            for (int i = 0; i < personList.Count; i++)
             {
-                string[] person = lines[i].Split(',');
-                if (person[0] == "visitor")
+                
+                if (personList[i] is Visitor)
                 {
 
-                    Console.WriteLine(person[1]);
+                    Console.WriteLine(personList[i].Name);
 
                 }
             }
         }
 
-        static void ListPersonDetails(string name, string[] personLines)
+        static List<Person> LoadPerson( string[] personLines)
         {
             List<Person> personList = new List<Person>() { };
             for (int i = 1; i < personLines.Length; i++)
@@ -114,8 +120,15 @@ namespace PRG2_Assignment
                     Visitor newvis = new Visitor(data[1], data[4], data[5]);
                     personList.Add(newvis);
                 }
-            }
 
+            }
+            return personList;
+
+            
+        }
+
+        static void ListPersonDetails(string name, List<Person> personList)
+        {
             foreach (Person x in personList)
             {
                 if (x.Name == name)
@@ -145,11 +158,48 @@ namespace PRG2_Assignment
 
         static void ListSHN(List<SHNFacility> list)
         {
-            Console.WriteLine("{0,-40}{1,-40}{2,-40}{3,-40}{4,-40}{5,-40}", "Facility Name", "Facility Capacity", "Facility Vacnacy", "Distance From Air Checkpoint", "Distance From Sea Checkpoint", "Distance From Land Checkpoint");
-            for (int i = 1; i < list.Count; i++)
+            Console.WriteLine("Facility");
+            Console.WriteLine("--------");
+            for (int i = 0; i < list.Count; i++)
             {
-                Console.WriteLine("{0,-40}{1,-40}{2,-40}{3,-40}{4,-40}{5,-40}", list[i].faclilityName, list[i].facilityCapacity, list[i].facilityVacancy, list[i].distFromAirCheckpoint, list[i].distFromSeaCheckpoint, list[i].distFromLandCheckpoint);
+                Console.WriteLine(list[i].faclilityName);
             }
+        }
+
+        static void CreateVisitor(List<Person> personList)
+        {
+            Console.Write("Enter Your Name: ");
+            string name = Convert.ToString(Console.ReadLine());
+            Console.Write("Enter Your Passport No.: ");
+            string passportNo = Convert.ToString(Console.ReadLine());
+            Console.Write("Enter Your Nationality: ");
+            string nationality = Convert.ToString(Console.ReadLine());
+
+            Visitor newvisitor = new Visitor(name, passportNo, nationality);
+            personList.Add(newvisitor);
+        }
+
+        static void CreateTravelEntryRecord(List<Person> personList)
+        {
+            Console.Write("Enter Your Name: ");
+            string name = Convert.ToString(Console.ReadLine());
+            foreach (Person x in personList)
+            {
+                if (x.Name == name)
+                {
+                    Console.Write("Enter Your Last Country Of Embarkation: ");
+                    string lcoe = Convert.ToString(Console.ReadLine());
+                    Console.Write("Enter Your Entry Mode: ");
+                    string entrymode = Convert.ToString(Console.ReadLine());
+                    DateTime entrydate = DateTime.Today;
+                    DateTime enddate = entrydate.AddDays(x.TravelEntryList[0].CalculateSHNDuration());
+
+
+                    
+                }
+            }
+
+
         }
         
 

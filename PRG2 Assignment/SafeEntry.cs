@@ -18,8 +18,8 @@ namespace PRG2_Assignment
 
         public DateTime CheckOut
         {
-            get { return CheckOut; }
-            set { CheckOut = value; }
+            get { return checkOut; }
+            set { checkOut = value; }
         }
 
 
