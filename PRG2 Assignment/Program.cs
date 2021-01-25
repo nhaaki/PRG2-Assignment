@@ -34,7 +34,11 @@ namespace PRG2_Assignment
             {
                 int input = DisplayMenu();
 
-                if (input == 0)
+                if (input == -1)
+                {
+                    continue;
+                }
+                else if (input == 0)
                 {
                     return;
                 }
@@ -87,13 +91,15 @@ namespace PRG2_Assignment
             Console.WriteLine();
             Console.WriteLine("Visitors");
             Console.WriteLine("--------");
+            int count = 1;
             for (int i = 0; i < personList.Count; i++)
             {
                 
                 if (personList[i] is Visitor)
                 {
 
-                    Console.WriteLine(personList[i].Name);
+                    Console.WriteLine("({0}) {1}", count, personList[i].Name);
+                    count++;
 
                 }
             }
@@ -140,6 +146,7 @@ namespace PRG2_Assignment
 
         static int DisplayMenu()
         {
+            Console.WriteLine();
             Console.WriteLine("=========================");
             Console.WriteLine("Main   monitoring   menu");
             Console.WriteLine("=========================");
@@ -150,10 +157,17 @@ namespace PRG2_Assignment
                 Console.WriteLine("({0}) {1}", x, choice[x]);
             }
             Console.Write("Enter choice: ");
-            int input = Convert.ToInt32(Console.ReadLine());
-
-            return input;
-            
+            try
+            {
+                int input = Convert.ToInt32(Console.ReadLine());
+                return input;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Wrong input! Please choose one of the options displayed above.");
+                return -1;
+            }
         }
 
         static void ListSHN(List<SHNFacility> list)
