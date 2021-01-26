@@ -193,7 +193,7 @@ namespace PRG2_Assignment
             personList.Add(newvisitor);
         }
 
-        static void CreateTravelEntryRecord(List<Person> personList)
+        static void CreateTravelEntryRecord(List<Person> personList, List<SHNFacility> list)
         {
             Console.Write("Enter Your Name: ");
             string name = Convert.ToString(Console.ReadLine());
@@ -206,14 +206,58 @@ namespace PRG2_Assignment
                     Console.Write("Enter Your Entry Mode: ");
                     string entrymode = Convert.ToString(Console.ReadLine());
                     DateTime entrydate = DateTime.Today;
-                    DateTime enddate = entrydate.AddDays(x.TravelEntryList[0].CalculateSHNDuration());
-
-
+                    TravelEntry newtravelentry = new TravelEntry(lcoe, entrymode, entrydate);
+                    x.TravelEntryList[0].CalculateSHNDuration();
                     
+
+                    while (true)
+                    {
+                        Console.WriteLine("Facility");
+                        Console.WriteLine("--------");
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            Console.WriteLine("[" + (i + 1) + "]" + list[i].faclilityName);
+                        }
+
+                        Console.Write("Enter Your SHN Facility Choice: ");
+                        int shnchoice = Convert.ToInt32(Console.ReadLine());
+
+                        if (list[shnchoice - 1].facilityVacancy < 0)
+                        {
+                            Console.WriteLine("The chosen SHN Facility is full");
+                        }
+                        else
+                        {
+                            newtravelentry.AssignSHNFacility(list[shnchoice - 1]);
+                            break;
+                        }
+
+                    }
+
+                    x.AddTravelEntry(newtravelentry);
+
+
+
                 }
             }
 
 
+        }
+
+        static void CalculateSHNCharges(List<Person> personList)
+        {
+            Console.Write("Enter Your Name: ");
+            string name = Convert.ToString(Console.ReadLine());
+            foreach (Person x in personList)
+            {
+                if (x.Name == name)
+                {
+                    if (x.TravelEntryList[0].shnEndDate < DateTime.Today)
+                    {
+
+                    }
+                }
+            }
         }
         
 
