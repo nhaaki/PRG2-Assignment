@@ -62,6 +62,10 @@ namespace PRG2_Assignment
                 {
                     ReplaceTraceTogether(personList);
                 }
+                else if (input == 5)
+                {
+                    ListBusinessLocations(businessList);
+                }
                 else
                 {
                     Console.WriteLine();
@@ -196,7 +200,8 @@ namespace PRG2_Assignment
             Console.WriteLine("Main   monitoring   menu");
             Console.WriteLine("=========================");
             Console.WriteLine();
-            List<string> choice = new List<string>() { "Exit the application", "Display all visitors", "Display details for a person", "Create visitor", "Assign/Replace TT Token" };
+            List<string> choice = new List<string>() { "Exit the application", "Display all visitors",
+                "Display details for a person", "Create visitor", "Assign/Replace TT Token", "Display business locations" };
             
             for (int x=0; x<choice.Count; x++){
                 Console.WriteLine("({0}) {1}", x, choice[x]);
@@ -223,6 +228,21 @@ namespace PRG2_Assignment
             for (int i = 0; i < list.Count; i++)
             {
                 Console.WriteLine(list[i].faclilityName);
+            }
+        }
+
+        static void ListBusinessLocations(List<BusinessLocation> list)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Business Locations");
+            Console.WriteLine("------------------");
+            Console.WriteLine();
+            for (int x = 0; x < list.Count; x++)
+            {
+                Console.WriteLine("({0}) {1}", x+1, list[x].BusinessName);
+                Console.WriteLine("Branch code: {0}", list[x].BranchCode);
+                Console.WriteLine("Maximum capacity: {0}", list[x].MaximumCapacity);
+                Console.WriteLine();
             }
         }
 
