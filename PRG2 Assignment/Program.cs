@@ -57,6 +57,10 @@ namespace PRG2_Assignment
                 {
                    CreateVisitor(personList);
                 }
+                else if (input == 4)
+                {
+                    ReplaceTraceTogether(personList);
+                }
             }
         }
 
@@ -156,7 +160,7 @@ namespace PRG2_Assignment
                             Console.WriteLine("---------------------------");
                             Console.WriteLine();
                             Console.WriteLine("Serial Number: {0}", z.Token.SerialNo);
-                            Console.WriteLine("Collection Number: {0}", z.Token.CollectionNumber);
+                            Console.WriteLine("Collection Location: {0}", z.Token.CollectionLocation);
                             Console.WriteLine("Expiry date: {0}", z.Token.ExpiryDate);
                         }
                     }
@@ -166,12 +170,12 @@ namespace PRG2_Assignment
 
         static int DisplayMenu()
         {
-            Console.WriteLine();
+            
             Console.WriteLine("=========================");
             Console.WriteLine("Main   monitoring   menu");
             Console.WriteLine("=========================");
             Console.WriteLine();
-            List<string> choice = new List<string>() { "Exit the application", "Display all visitors", "Display details for a person" };
+            List<string> choice = new List<string>() { "Exit the application", "Display all visitors", "Display details for a person", "Create visitor", "Assign/Replace TT Token" };
             
             for (int x=0; x<choice.Count; x++){
                 Console.WriteLine("({0}) {1}", x, choice[x]);
@@ -253,15 +257,9 @@ namespace PRG2_Assignment
                         }
 
                     }
-
                     x.AddTravelEntry(newtravelentry);
-
-
-
                 }
             }
-
-
         }
 
         static void CalculateSHNCharges(List<Person> personList)
@@ -275,6 +273,51 @@ namespace PRG2_Assignment
                     if (x.TravelEntryList[0].shnEndDate < DateTime.Today)
                     {
 
+                    }
+                }
+            }
+        }
+
+        static void ReplaceTraceTogether(List<Person> personList)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Replace TraceTogether token (For Residents)");
+            Console.Write("Enter name: ");
+            string resName = Console.ReadLine();
+
+            foreach (Person x in personList)
+            {
+                if (x is Resident && x.Name == resName)
+                {
+                    Resident z = (Resident)x;
+                    if (z.Token is null)
+                    {
+                        Random r = new Random();
+                        string newSerialNo = r.Next(0, 1000000).ToString("D6");
+                        Console.WriteLine();
+                        Console.Write("Enter CC to collect token from: ");
+                        string newCollectionLoc = Console.ReadLine();
+
+                        z.Token = new TraceTogetherToken(newSerialNo, newCollectionLoc, DateTime.Now.AddMonths(6));
+                    }
+                    else
+                    {
+                        if (z.Token.IsEligibleForReplacement())
+                        {
+                            Random r = new Random();
+                            string newSerialNo = r.Next(0, 1000000).ToString("D6");
+                            Console.WriteLine();
+                            Console.Write("Enter CC to collect token from: ");
+                            string newCollectionLoc = Console.ReadLine();
+
+                            z.Token = new TraceTogetherToken(newSerialNo, newCollectionLoc, DateTime.Now.AddMonths(6));
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Your token is not eligible for a replacement.");
+                            Console.WriteLine();
+                        }
                     }
                 }
             }
