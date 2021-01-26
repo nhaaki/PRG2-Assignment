@@ -25,7 +25,7 @@ namespace PRG2_Assignment
 
             for (int i = 0; i < apidata.Count; i++)
             {
-                shnList.Add(new SHNFacility(apidata[i].facilityname, apidata[i].facilitycapacity, apidata[i].facilitycapacity, apidata[i].distFromAirCheckpoint, apidata[i].distFromSeaCheckpoint, apidata[i].distFromLandCheckpoint));
+                shnList.Add(new SHNFacility(apidata[i].facilityname, apidata[i].facilitycapacity, apidata[i].distFromAirCheckpoint, apidata[i].distFromSeaCheckpoint, apidata[i].distFromLandCheckpoint));
             }
 
 
@@ -117,9 +117,13 @@ namespace PRG2_Assignment
                     {
                         Resident res = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
                         res.Token = new TraceTogetherToken(data[6], data[7], DateTime.Parse(data[8]));
+                        personList.Add(res);
                     }
-                    Resident newres = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
-                    personList.Add(newres);
+                    else
+                    {
+                        Resident newres = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                        personList.Add(newres);
+                    }
                 }
                 else if (data[0] == "visitor")
                 {
@@ -140,6 +144,22 @@ namespace PRG2_Assignment
                 if (x.Name == name)
                 {
                     Console.WriteLine(x.ToString());
+                    if (x is Resident)
+                    {
+                        
+                        Resident z = (Resident)x;
+                        
+                        if (z.Token != null)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("TraceTogether Token Details");
+                            Console.WriteLine("---------------------------");
+                            Console.WriteLine();
+                            Console.WriteLine("Serial Number: {0}", z.Token.SerialNo);
+                            Console.WriteLine("Collection Number: {0}", z.Token.CollectionNumber);
+                            Console.WriteLine("Expiry date: {0}", z.Token.ExpiryDate);
+                        }
+                    }
                 }
             }
         }
