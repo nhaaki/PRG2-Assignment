@@ -34,7 +34,7 @@ namespace PRG2_Assignment
             {
                 int input = DisplayMenu();
 
-                if (input == -1)
+                if (input == -123456)
                 {
                     continue;
                 }
@@ -60,6 +60,12 @@ namespace PRG2_Assignment
                 else if (input == 4)
                 {
                     ReplaceTraceTogether(personList);
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("That option does not exist! Please choose one of the options displayed above.");
+                    Console.WriteLine();
                 }
             }
         }
@@ -190,7 +196,8 @@ namespace PRG2_Assignment
             {
                 Console.WriteLine();
                 Console.WriteLine("Wrong input! Please choose one of the options displayed above.");
-                return -1;
+                Console.WriteLine();
+                return -123456;
             }
         }
 
