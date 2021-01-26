@@ -58,11 +58,10 @@ namespace PRG2_Assignment
 
         public SHNFacility() { }
 
-        public SHNFacility(string fn, int fc, int fv, double dfac, double dfsc, double dflc)
+        public SHNFacility(string fn, int fc, double dfac, double dfsc, double dflc)
         {
             faclilityName = fn;
             facilityCapacity = fc;
-            facilityVacancy = fv;
             distFromAirCheckpoint = dfac;
             distFromSeaCheckpoint = dfsc;
             distFromLandCheckpoint = dflc;

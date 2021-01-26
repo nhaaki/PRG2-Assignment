@@ -59,14 +59,12 @@ namespace PRG2_Assignment
 
         public TravelEntry() { }
 
-        public TravelEntry(string lcoe, string em, DateTime ed, DateTime shned, SHNFacility shns, bool ip)
+        public TravelEntry(string lcoe, string em, DateTime ed)
         {
             lastCountryOfEmbarkation = lcoe;
             entryMode = em;
             entryDate = ed;
-            shnEndDate = shned;
-            shnStay = shns;
-            isPaid = ip;
+            
         }
 
         public void AssignSHNFacility(SHNFacility x)
@@ -74,19 +72,19 @@ namespace PRG2_Assignment
             shnStay = x;
         }
 
-        public int CalculateSHNDuration()
+        public void CalculateSHNDuration()
         {
             if (lastCountryOfEmbarkation == "New Zealand" | lastCountryOfEmbarkation == "Vietnam")
             {
-                return 0;
+                shnEndDate = entryDate;
             }
             else if (lastCountryOfEmbarkation == "Macao SAR")
             {
-                return 7;
+                shnEndDate = entryDate.AddDays(7);
             }
             else
             {
-                return 14;
+                shnEndDate = entryDate.AddDays(14);
             }
 
         }
