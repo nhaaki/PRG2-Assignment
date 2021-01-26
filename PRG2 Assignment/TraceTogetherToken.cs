@@ -14,12 +14,12 @@ namespace PRG2_Assignment
             set { serialNo = value; }
         }
 
-        private string collectionNumber;
+        private string collectionLocation;
 
-        public string CollectionNumber
+        public string CollectionLocation
         {
-            get { return collectionNumber; }
-            set { collectionNumber = value; }
+            get { return collectionLocation; }
+            set { collectionLocation = value; }
         }
 
         private DateTime expiryDate;
@@ -35,9 +35,24 @@ namespace PRG2_Assignment
         public TraceTogetherToken(string sn, string cn, DateTime ed)
         {
             SerialNo = sn;
-            CollectionNumber = cn;
+            CollectionLocation = cn;
             ExpiryDate = ed;
         }
 
+        public bool IsEligibleForReplacement()
+        {
+            
+            if (DateTime.Compare(ExpiryDate, DateTime.Now) >= 0)
+            {
+                Console.WriteLine(ExpiryDate);
+                Console.WriteLine(DateTime.Now);
+                return false;
+            }
+            else if (DateTime.Compare(ExpiryDate.AddMonths(1), DateTime.Now) >= 0)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
