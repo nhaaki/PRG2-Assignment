@@ -15,14 +15,15 @@ namespace PRG2_Assignment
 
             string[] personLines = File.ReadAllLines("Person.csv");
 
-            string[] BusinessLines = File.ReadAllLines("BusinessLocation.csv");
+            string[] businessLines = File.ReadAllLines("BusinessLocation.csv");
 
             List<API> apidata = LoadAPI();
             
             List<Person> personList = LoadPerson(personLines);
+            List<BusinessLocation> businessList = LoadBusinesses(businessLines);
 
             List<SHNFacility> shnList = new List<SHNFacility>();
-
+            
             for (int i = 0; i < apidata.Count; i++)
             {
                 shnList.Add(new SHNFacility(apidata[i].facilityname, apidata[i].facilitycapacity, apidata[i].distFromAirCheckpoint, apidata[i].distFromSeaCheckpoint, apidata[i].distFromLandCheckpoint));
@@ -114,6 +115,20 @@ namespace PRG2_Assignment
                 }
             }
         }
+
+        static List<BusinessLocation> LoadBusinesses(string[] businessLines)
+        {
+            List<BusinessLocation> businessList = new List<BusinessLocation>() { };
+            for (int i = 1; i<businessLines.Length; i++)
+            {
+                string[] data = businessLines[i].Split(',');
+                BusinessLocation newBL = new BusinessLocation(data[0], data[1], Convert.ToInt32(data[2]));
+                businessList.Add(newBL);
+            }
+
+            return businessList;
+        }
+
 
         static List<Person> LoadPerson( string[] personLines)
         {
