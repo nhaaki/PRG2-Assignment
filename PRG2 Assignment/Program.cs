@@ -66,10 +66,14 @@ namespace PRG2_Assignment
                 {
                     ListBusinessLocations(businessList);
                 }
+                else if (input == 7)
+                {
+                    EditBL(businessList);
+                }
                 else
                 {
                     Console.WriteLine();
-                    Console.WriteLine("That option does not exist! Please choose one of the options displayed above.");
+                    Console.WriteLine("|ERROR| That option does not exist! Please choose one of the options displayed above.");
                     Console.WriteLine();
                 }
             }
@@ -215,7 +219,7 @@ namespace PRG2_Assignment
             catch (FormatException)
             {
                 Console.WriteLine();
-                Console.WriteLine("Wrong input! Please choose one of the options displayed above.");
+                Console.WriteLine("|ERROR| Wrong input! Please choose one of the options displayed above.");
                 Console.WriteLine();
                 return -123456;
             }
@@ -242,6 +246,38 @@ namespace PRG2_Assignment
                 Console.WriteLine("({0}) {1}", x+1, list[x].BusinessName);
                 Console.WriteLine("Branch code: {0}", list[x].BranchCode);
                 Console.WriteLine("Maximum capacity: {0}", list[x].MaximumCapacity);
+                Console.WriteLine();
+            }
+        }
+
+        static void EditBL(List<BusinessLocation> list)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Edit business location capacity");
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine();
+            Console.Write("Enter business name: ");
+            string bName = Console.ReadLine();
+
+            int found = 0;
+
+            foreach (BusinessLocation x in list)
+            {
+                if (x.BusinessName == bName)
+                {
+                    Console.WriteLine();
+                    Console.Write("Enter new capacity: ");
+                    string newCapacity = Console.ReadLine();
+
+                    x.MaximumCapacity = Convert.ToInt32(newCapacity);
+                    found++;
+                }
+            }
+
+            if (found != 1)
+            {
+                Console.WriteLine();
+                Console.WriteLine("|ERROR| Business not found! Make sure you spelled it correctly.");
                 Console.WriteLine();
             }
         }
