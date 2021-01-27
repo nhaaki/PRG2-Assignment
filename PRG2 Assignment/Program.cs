@@ -66,9 +66,13 @@ namespace PRG2_Assignment
                 {
                     ListBusinessLocations(businessList);
                 }
-                else if (input == 7)
+                else if (input == 6)
                 {
                     EditBL(businessList);
+                }
+                else if (input == 7)
+                {
+                    SafeEntryCheckIn(personList, businessList);
                 }
                 else
                 {
@@ -193,6 +197,20 @@ namespace PRG2_Assignment
                             Console.WriteLine("Expiry date: {0}", z.Token.ExpiryDate);
                         }
                     }
+                    if (x.SafeEntryList.Count != 0)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("SafeEntry Details");
+                        Console.WriteLine("-----------------");
+                        foreach (SafeEntry z in x.SafeEntryList)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Business Location Name: {0}", z.Location.BusinessName);
+                            Console.WriteLine("Branch code: {0}", z.Location.BranchCode);
+                            Console.WriteLine("Check-in: {0}", z.CheckIn);
+                            Console.WriteLine("Check-out: {0}", z.CheckOut);
+                        }
+                    }
                 }
             }
         }
@@ -205,7 +223,8 @@ namespace PRG2_Assignment
             Console.WriteLine("=========================");
             Console.WriteLine();
             List<string> choice = new List<string>() { "Exit the application", "Display all visitors",
-                "Display details for a person", "Create visitor", "Assign/Replace TT Token", "Display business locations" };
+                "Display details for a person", "Create visitor", "Assign/Replace TT Token", "Display business locations",
+                "Edit business location capacity", "SafeEntry Check-in" };
             
             for (int x=0; x<choice.Count; x++){
                 Console.WriteLine("({0}) {1}", x, choice[x]);
@@ -246,6 +265,7 @@ namespace PRG2_Assignment
                 Console.WriteLine("({0}) {1}", x+1, list[x].BusinessName);
                 Console.WriteLine("Branch code: {0}", list[x].BranchCode);
                 Console.WriteLine("Maximum capacity: {0}", list[x].MaximumCapacity);
+                Console.WriteLine("Available spaces: {0}", list[x].MaximumCapacity - list[x].VisitorsNow);
                 Console.WriteLine();
             }
         }
@@ -279,6 +299,72 @@ namespace PRG2_Assignment
                 Console.WriteLine();
                 Console.WriteLine("|ERROR| Business not found! Make sure you spelled it correctly.");
                 Console.WriteLine();
+            }
+        }
+
+        static void SafeEntryCheckIn(List<Person> personList, List<BusinessLocation> bList)
+        {
+            Console.WriteLine();
+            Console.WriteLine("SafeEntry Check-In");
+            Console.WriteLine("------------------");
+            Console.WriteLine();
+            Console.Write("Enter name: ");
+            string name = Console.ReadLine();
+            int found = 0;
+            Person chosenPerson = personList[0];
+            
+            foreach (Person x in personList)
+            {
+                if (x.Name == name)
+                {
+                    chosenPerson = x;
+                    found++;
+                }
+            }
+            if (found == 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("|ERROR| Person not found!");
+            }
+            else
+            {
+                ListBusinessLocations(bList);
+                Console.Write("Enter choice [1-4]: ");
+                try
+                {
+                    BusinessLocation chosen = bList[Convert.ToInt32(Console.ReadLine()) - 1];
+                    if (chosen.VisitorsNow != chosen.MaximumCapacity)
+                    {
+                        SafeEntry seObject = new SafeEntry(DateTime.Now, chosen);
+                        chosen.VisitorsNow++;
+
+                        chosenPerson.SafeEntryList.Add(seObject);
+                        Console.WriteLine();
+                        Console.WriteLine("SafeEntry successful!");
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("|ERROR| Business Location is full!");
+                        Console.WriteLine();
+                    }
+                   
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("|ERROR| Wrong input! Enter a number.");
+                    Console.WriteLine();
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("|ERROR| Please choose one of the options listed above.");
+                    Console.WriteLine();
+                }
+
+
             }
         }
 

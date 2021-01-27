@@ -33,5 +33,11 @@ namespace PRG2_Assignment
             Location = l;
         }
 
+        public void PerformCheckout()
+        {
+            DateTime checkOutTime = DateTime.Now;
+            CheckOut = checkOutTime;
+        }
+
     }
 }
