@@ -49,9 +49,9 @@ namespace PRG2_Assignment
 
 
 
-        private bool ispaid;
+        private bool ispaid = false;
 
-        public bool isPaid
+        public bool isPaid 
         {
             get { return ispaid; }
             set { ispaid = value; }
@@ -92,7 +92,7 @@ namespace PRG2_Assignment
 
         public override string ToString()
         {
-            return "Last Country Visited: " + lastCountryOfEmbarkation + " Entry Mode: " + entryMode + " SHN Entry Date: " + entryDate + " SHN End Date: " + shnEndDate + " SHN Stay: " + shnStay + " Is Paid: " + isPaid;
+            return "Last Country Visited: " + lastCountryOfEmbarkation + " Entry Mode: " + entryMode + " SHN Entry Date: " + entryDate;
         }
     }
 }
