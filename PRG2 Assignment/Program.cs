@@ -19,15 +19,18 @@ namespace PRG2_Assignment
 
             List<API> apidata = LoadAPI();
             
-            List<Person> personList = LoadPerson(personLines);
+            
             List<BusinessLocation> businessList = LoadBusinesses(businessLines);
 
             List<SHNFacility> shnList = new List<SHNFacility>();
             
+
             for (int i = 0; i < apidata.Count; i++)
             {
                 shnList.Add(new SHNFacility(apidata[i].facilityname, apidata[i].facilitycapacity, apidata[i].distFromAirCheckpoint, apidata[i].distFromSeaCheckpoint, apidata[i].distFromLandCheckpoint));
             }
+
+            List<Person> personList = LoadPerson(personLines, shnList);
 
 
 
@@ -73,6 +76,14 @@ namespace PRG2_Assignment
                 else if (input == 7)
                 {
                     SafeEntryCheckIn(personList, businessList);
+                }
+                else if (input == 8)
+                {
+                    CreateTravelEntryRecord(personList, shnList);
+                }
+                else if (input == 9)
+                {
+                    CalculateSHNCharges(personList);
                 }
                 else
                 {
@@ -142,7 +153,7 @@ namespace PRG2_Assignment
         }
 
 
-        static List<Person> LoadPerson( string[] personLines)
+        static List<Person> LoadPerson( string[] personLines, List<SHNFacility> shnList)
         {
             List<Person> personList = new List<Person>() { };
             for (int i = 1; i < personLines.Length; i++)
@@ -161,10 +172,55 @@ namespace PRG2_Assignment
                         Resident newres = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
                         personList.Add(newres);
                     }
+                    if(data[11] != "")
+                    {
+                        TravelEntry travelentry = new TravelEntry(data[9], data[10], DateTime.ParseExact(data[11], "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture));
+                        Person newres = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                        newres.AddTravelEntry(travelentry);
+                        newres.TravelEntryList[newres.TravelEntryList.Count - 1].isPaid = Convert.ToBoolean(data[13]);
+                        
+
+                        for (int x = 0; x < shnList.Count; x++)
+                        {
+
+                            
+                            if (shnList[x].faclilityName == data[14])
+                            {
+                                newres.TravelEntryList[newres.TravelEntryList.Count - 1].AssignSHNFacility(shnList[x]);
+                                
+
+
+                            }
+                        }
+                        personList.Add(newres);
+                    }
                 }
-                else if (data[0] == "visitor")
+                
+                else if (data[0] == "visitor" && data[11] != "")
                 {
-                    Visitor newvis = new Visitor(data[1], data[4], data[5]);
+                    
+                    TravelEntry travelentry = new TravelEntry(data[9], data[10], DateTime.ParseExact(data[11], "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture));
+                    Person newvis = new Visitor(data[1], data[4], data[5]);
+                    newvis.AddTravelEntry(travelentry);
+                    newvis.TravelEntryList[newvis.TravelEntryList.Count - 1].isPaid = Convert.ToBoolean(data[13]);
+                    
+                    for(int x = 0; x < shnList.Count; x++)
+                    {
+
+
+                        if (shnList[x].faclilityName == data[14])
+                        {
+                            newvis.TravelEntryList[newvis.TravelEntryList.Count - 1].AssignSHNFacility(shnList[x]);
+                            
+
+                        }
+                    }
+                    personList.Add(newvis);
+                }
+
+                else if (data[0] == "visitor" && data[11] == "")
+                {
+                    Person newvis = new Visitor(data[1], data[4], data[5]);
                     personList.Add(newvis);
                 }
 
@@ -383,62 +439,137 @@ namespace PRG2_Assignment
 
         static void CreateTravelEntryRecord(List<Person> personList, List<SHNFacility> list)
         {
-            Console.Write("Enter Your Name: ");
-            string name = Convert.ToString(Console.ReadLine());
-            foreach (Person x in personList)
+            while (true)
             {
-                if (x.Name == name)
+                bool success = false;
+                Console.Write("Enter Your Name: ");
+                string name = Convert.ToString(Console.ReadLine());
+                name.ToLower();
+
+                foreach (Person x in personList)
                 {
-                    Console.Write("Enter Your Last Country Of Embarkation: ");
-                    string lcoe = Convert.ToString(Console.ReadLine());
-                    Console.Write("Enter Your Entry Mode: ");
-                    string entrymode = Convert.ToString(Console.ReadLine());
-                    DateTime entrydate = DateTime.Today;
-                    TravelEntry newtravelentry = new TravelEntry(lcoe, entrymode, entrydate);
-                    x.TravelEntryList[0].CalculateSHNDuration();
-                    
-
-                    while (true)
+                    if (x.Name.ToLower() == name)
                     {
-                        Console.WriteLine("Facility");
-                        Console.WriteLine("--------");
-                        for (int i = 0; i < list.Count; i++)
+                        try
                         {
-                            Console.WriteLine("[" + (i + 1) + "]" + list[i].faclilityName);
-                        }
+                            Console.Write("Enter Your Last Country Of Embarkation: ");
+                            string lcoe = Convert.ToString(Console.ReadLine());
+                            lcoe = char.ToUpper(lcoe[0]) + lcoe.Substring(1);
+                            Console.WriteLine(lcoe);
 
-                        Console.Write("Enter Your SHN Facility Choice: ");
-                        int shnchoice = Convert.ToInt32(Console.ReadLine());
 
-                        if (list[shnchoice - 1].facilityVacancy < 0)
-                        {
-                            Console.WriteLine("The chosen SHN Facility is full");
+                            while (true)
+                            {
+                                Console.Write("Enter Your Entry Mode: ");
+                                string entrymode = Convert.ToString(Console.ReadLine());
+                                entrymode = char.ToUpper(entrymode[0]) + entrymode.Substring(1);
+
+                                if (entrymode == "Land" | entrymode == "Sea" | entrymode == "Air")
+                                {
+                                    DateTime entrydate = DateTime.Today.AddDays(-1);
+                                    TravelEntry newtravelentry = new TravelEntry(lcoe, entrymode, entrydate);
+                                    newtravelentry.CalculateSHNDuration();
+
+
+                                    while (true)
+                                    {
+                                        Console.WriteLine("Facility");
+                                        Console.WriteLine("--------");
+                                        for (int i = 0; i < list.Count; i++)
+                                        {
+                                            Console.WriteLine("[" + (i + 1) + "]" + list[i].faclilityName);
+                                        }
+
+                                        Console.Write("Enter Your SHN Facility Choice: ");
+                                        int shnchoice = Convert.ToInt32(Console.ReadLine());
+
+                                        if (list[shnchoice - 1].facilityVacancy < 0)
+                                        {
+                                            Console.WriteLine("The chosen SHN Facility is full");
+                                        }
+                                        else
+                                        {
+                                            newtravelentry.AssignSHNFacility(list[shnchoice - 1]);
+                                            list[shnchoice - 1].facilityVacancy = list[shnchoice - 1].facilityVacancy - 1;
+                                            break;
+                                        }
+
+                                    }
+                                    Console.WriteLine("Your Travel Entry Record has been created");
+                                    x.AddTravelEntry(newtravelentry);
+                                    success = true;
+                                    break;
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Please enter a valid Entry Mode");
+                                }
+
+                            }
                         }
-                        else
+                        catch (IndexOutOfRangeException)
                         {
-                            newtravelentry.AssignSHNFacility(list[shnchoice - 1]);
-                            break;
+                            Console.WriteLine("|ERROR| Input not valid");
                         }
+                        
+
+
+
 
                     }
-                    x.AddTravelEntry(newtravelentry);
+                    
                 }
+                if (success)
+                {
+                    break;
+                }
+                Console.WriteLine("Please enter a valid name");
             }
         }
 
         static void CalculateSHNCharges(List<Person> personList)
         {
-            Console.Write("Enter Your Name: ");
-            string name = Convert.ToString(Console.ReadLine());
-            foreach (Person x in personList)
+            while (true)
             {
-                if (x.Name == name)
+                bool success = false;
+                
+                Console.Write("Enter Your Name: ");
+                string name = Convert.ToString(Console.ReadLine());
+                foreach (Person x in personList)
                 {
-                    if (x.TravelEntryList[0].shnEndDate < DateTime.Today)
+                    Console.WriteLine(x.TravelEntryList.Count - 1);
+                    if (x.Name == name)
                     {
-
+                        
+                        if (x.TravelEntryList[x.TravelEntryList.Count - 1].shnEndDate < DateTime.Today && x.TravelEntryList[x.TravelEntryList.Count - 1].isPaid == false)
+                        {
+                            double cost = x.CalculateSHNCharges();
+                            Console.WriteLine("Your total cost is $" + cost);
+                            while (true)
+                            {
+                                Console.Write("Enter p to make your payment: ");
+                                string opt = Convert.ToString(Console.ReadLine());
+                                if (opt == "p")
+                                {
+                                    x.TravelEntryList[0].isPaid = true;
+                                    success = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("You have not made your payment. Please Try Again");
+                                }
+                            }
+                        }
                     }
                 }
+
+                if (success)
+                {
+                    break;
+                }
+                Console.WriteLine("Please enter a valid name");
             }
         }
 
