@@ -281,6 +281,7 @@ namespace PRG2_Assignment
                 if (x.Name == name)
                 {
                     found++;
+                    Console.WriteLine();
                     Console.WriteLine(x.ToString());
                     if (x is Resident)
                     {
@@ -678,11 +679,13 @@ namespace PRG2_Assignment
             Console.WriteLine("Replace TraceTogether token (For Residents)");
             Console.Write("Enter name: ");
             string resName = Console.ReadLine();
+            int found = 0;
 
             foreach (Person x in personList)
             {
                 if (x is Resident && x.Name == resName)
                 {
+                    found++;
                     Resident z = (Resident)x;
                     if (z.Token is null)
                     {
@@ -714,6 +717,18 @@ namespace PRG2_Assignment
                         }
                     }
                 }
+                else if (x is Visitor && x.Name == resName)
+                {
+                    found++;
+                    Console.WriteLine();
+                    Console.WriteLine("|ERROR| Person is not a resident!");
+                    Console.WriteLine();
+                }
+            }
+            if (found == 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("|ERROR| Invalid input! Enter the name of an exisiting person.");
             }
         }
 
