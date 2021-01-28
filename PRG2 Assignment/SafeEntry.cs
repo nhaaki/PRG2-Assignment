@@ -31,12 +31,23 @@ namespace PRG2_Assignment
         {
             CheckIn = ci;
             Location = l;
+            
         }
 
         public void PerformCheckout()
         {
             DateTime checkOutTime = DateTime.Now;
             CheckOut = checkOutTime;
+        }
+
+        public override string ToString()
+        {
+            if (CheckOut == DateTime.MinValue)
+            {
+                return "Location: " + Location.BusinessName + "\nCheck-in datetime: " + CheckIn + "\nCheck-out datetime: Pending...";
+            }
+            else
+                return "Location: " + Location.BusinessName + "\nCheck-in datetime: " + CheckIn + "\nCheck-out datetime: " + CheckOut;
         }
 
     }

@@ -79,11 +79,22 @@ namespace PRG2_Assignment
                 }
                 else if (input == 8)
                 {
-                    CreateTravelEntryRecord(personList, shnList);
+                    SafeEntryCheckOut(personList);
                 }
                 else if (input == 9)
                 {
+                    CreateTravelEntryRecord(personList, shnList);
+                }
+                else if (input == 10)
+                {
                     CalculateSHNCharges(personList);
+                }
+                else if (input == 11)
+                {
+                    foreach (Person x in personList)
+                    {
+                        Console.WriteLine(x.Name);
+                    }
                 }
                 else
                 {
@@ -264,7 +275,12 @@ namespace PRG2_Assignment
                             Console.WriteLine("Business Location Name: {0}", z.Location.BusinessName);
                             Console.WriteLine("Branch code: {0}", z.Location.BranchCode);
                             Console.WriteLine("Check-in: {0}", z.CheckIn);
-                            Console.WriteLine("Check-out: {0}", z.CheckOut);
+                            if (z.CheckOut == DateTime.MinValue)
+                            {
+                                Console.WriteLine("Check-out: {0}", "Pending...");
+                            }
+                            else
+                                Console.WriteLine("Check-out: {0}", z.CheckOut);
                         }
                     }
                 }
@@ -280,7 +296,7 @@ namespace PRG2_Assignment
             Console.WriteLine();
             List<string> choice = new List<string>() { "Exit the application", "Display all visitors",
                 "Display details for a person", "Create visitor", "Assign/Replace TT Token", "Display business locations",
-                "Edit business location capacity", "SafeEntry Check-in" };
+                "Edit business location capacity", "SafeEntry Check-in", "SafeEntry Check-out" };
             
             for (int x=0; x<choice.Count; x++){
                 Console.WriteLine("({0}) {1}", x, choice[x]);
@@ -424,6 +440,47 @@ namespace PRG2_Assignment
             }
         }
 
+        static void SafeEntryCheckOut(List<Person> personList)
+        {
+            Console.WriteLine();
+            Console.WriteLine("SafeEntry Check-out");
+            Console.WriteLine("-------------------");
+            Console.WriteLine();
+            Console.Write("Enter name: ");
+            string name = Console.ReadLine();
+            Console.WriteLine();
+
+            foreach (Person x in personList)
+            {
+                if (x.Name == name)
+                {
+                    foreach (SafeEntry y in x.SafeEntryList)
+                    {
+                        if (y.CheckOut == DateTime.MinValue)
+                        {
+                            Console.WriteLine(">>");
+                            Console.WriteLine(y.ToString());
+                            Console.WriteLine();
+                        }
+                    }
+
+                    Console.Write("Enter name of business to check-out: ");
+                    string bname = Console.ReadLine();
+
+                    foreach (SafeEntry z in x.SafeEntryList)
+                    {
+                        if (z.Location.BusinessName == bname)
+                        {
+                            z.CheckOut = DateTime.Now;
+                        }
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine("Successfully checked out!");
+                    Console.WriteLine();
+                }
+            }
+        }
+
         static void CreateVisitor(List<Person> personList)
         {
             Console.Write("Enter Your Name: ");
@@ -512,11 +569,6 @@ namespace PRG2_Assignment
                         {
                             Console.WriteLine("|ERROR| Input not valid");
                         }
-                        
-
-
-
-
                     }
                     
                 }
