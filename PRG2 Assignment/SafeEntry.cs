@@ -44,10 +44,10 @@ namespace PRG2_Assignment
         {
             if (CheckOut == DateTime.MinValue)
             {
-                return "Location: " + Location.BusinessName + "\nCheck-in datetime: " + CheckIn + "\nCheck-out datetime: Pending...";
+                return "Location name: " + Location.BusinessName + "\nBranch code: " + Location.BranchCode + "\nCheck-in datetime: " + CheckIn + "\nCheck-out datetime: Pending...";
             }
             else
-                return "Location: " + Location.BusinessName + "\nCheck-in datetime: " + CheckIn + "\nCheck-out datetime: " + CheckOut;
+                return "Location name: " + Location.BusinessName + "\nBranch code: " + Location.BranchCode + "\nCheck-in datetime: " + CheckIn + "\nCheck-out datetime: " + CheckOut;
         }
 
     }
