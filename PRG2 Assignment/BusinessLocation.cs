@@ -45,7 +45,10 @@ namespace PRG2_Assignment
             BranchCode = bc;
             MaximumCapacity = mc;
         }
-        
 
+        public override string ToString()
+        {
+            return "Business name: " + BusinessName + "\nBranch code: " + BranchCode + "\nMaximum Capacity: " + MaximumCapacity + "\nAvailable spaces: " + (MaximumCapacity - VisitorsNow);
+        }
     }
 }

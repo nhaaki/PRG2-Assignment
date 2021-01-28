@@ -330,19 +330,9 @@ namespace PRG2_Assignment
 
                             Console.WriteLine("Faclility Name: {0}", x.TravelEntryList[x.TravelEntryList.Count - 1].shnStay.faclilityName);
                         }
-
-
-
-
                     }
                 }
-
-
-
-
-
             }
-            
         }
 
         static int DisplayMenu()
@@ -354,7 +344,8 @@ namespace PRG2_Assignment
             Console.WriteLine();
             List<string> choice = new List<string>() { "Exit the application", "Display all visitors",
                 "Display details for a person", "Create visitor", "Assign/Replace TT Token", "Display business locations",
-                "Edit business location capacity", "SafeEntry Check-in", "SafeEntry Check-out", "List SHN Faclilties", "Create Visitor", "Create TravelEntry Record", "Calculate SHN Charges"};
+                "Edit business location capacity", "SafeEntry Check-in", "SafeEntry Check-out", "List SHN Faclilties",
+                "Create Visitor", "Create TravelEntry Record", "Calculate SHN Charges"};
 
             for (int x = 0; x < choice.Count; x++)
             {
@@ -393,10 +384,8 @@ namespace PRG2_Assignment
             Console.WriteLine();
             for (int x = 0; x < list.Count; x++)
             {
-                Console.WriteLine("({0}) {1}", x + 1, list[x].BusinessName);
-                Console.WriteLine("Branch code: {0}", list[x].BranchCode);
-                Console.WriteLine("Maximum capacity: {0}", list[x].MaximumCapacity);
-                Console.WriteLine("Available spaces: {0}", list[x].MaximumCapacity - list[x].VisitorsNow);
+                Console.WriteLine("[{0}]", x+1);
+                Console.WriteLine(list[x].ToString());
                 Console.WriteLine();
             }
         }
@@ -571,8 +560,6 @@ namespace PRG2_Assignment
                         string lcoe = Convert.ToString(Console.ReadLine());
                         lcoe = char.ToUpper(lcoe[0]) + lcoe.Substring(1);
                         
-
-
                         while (true)
                         {
                             Console.Write("Enter Your Entry Mode: ");
