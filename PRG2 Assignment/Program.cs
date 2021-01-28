@@ -58,6 +58,7 @@ namespace PRG2_Assignment
                     Console.Write("Enter name of person: ");
                     string name = Console.ReadLine();
                     ListPersonDetails(name, personList);
+                    
                 }
                 else if (input == 3)
                 {
@@ -274,10 +275,12 @@ namespace PRG2_Assignment
 
         static void ListPersonDetails(string name, List<Person> personList)
         {
+            int found = 0;
             foreach (Person x in personList)
             {
                 if (x.Name == name)
                 {
+                    found++;
                     Console.WriteLine(x.ToString());
                     if (x is Resident)
                     {
@@ -322,6 +325,12 @@ namespace PRG2_Assignment
                         }
                     }
                 }
+            }
+            if (found == 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("|ERROR| Person not found! Please enter the correct name.");
+                Console.WriteLine();
             }
         }
 
