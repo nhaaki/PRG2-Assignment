@@ -178,12 +178,8 @@ namespace PRG2_Assignment
                         res.Token = new TraceTogetherToken(data[6], data[7], DateTime.Parse(data[8]));
                         personList.Add(res);
                     }
-                    else
-                    {
-                        Resident newres = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
-                        personList.Add(newres);
-                    }
-                    if(data[11] != "")
+                    
+                    else if(data[11] != "")
                     {
                         TravelEntry travelentry = new TravelEntry(data[9], data[10], DateTime.ParseExact(data[11], "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture));
                         Person newres = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
@@ -203,6 +199,11 @@ namespace PRG2_Assignment
 
                             }
                         }
+                        personList.Add(newres);
+                    }
+                    else
+                    {
+                        Resident newres = new Resident(data[1], data[2], DateTime.ParseExact(data[3], "dd/MM/yyyy", CultureInfo.InvariantCulture));
                         personList.Add(newres);
                     }
                 }
@@ -296,7 +297,7 @@ namespace PRG2_Assignment
             Console.WriteLine();
             List<string> choice = new List<string>() { "Exit the application", "Display all visitors",
                 "Display details for a person", "Create visitor", "Assign/Replace TT Token", "Display business locations",
-                "Edit business location capacity", "SafeEntry Check-in", "SafeEntry Check-out" };
+                "Edit business location capacity", "SafeEntry Check-in", "SafeEntry Check-out",  };
             
             for (int x=0; x<choice.Count; x++){
                 Console.WriteLine("({0}) {1}", x, choice[x]);
