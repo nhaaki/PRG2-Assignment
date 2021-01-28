@@ -290,9 +290,7 @@ namespace PRG2_Assignment
                             Console.WriteLine("TraceTogether Token Details");
                             Console.WriteLine("---------------------------");
                             Console.WriteLine();
-                            Console.WriteLine("Serial Number: {0}", z.Token.SerialNo);
-                            Console.WriteLine("Collection Location: {0}", z.Token.CollectionLocation);
-                            Console.WriteLine("Expiry date: {0}", z.Token.ExpiryDate);
+                            Console.WriteLine(z.Token.ToString());
                         }
                     }
 
@@ -304,15 +302,7 @@ namespace PRG2_Assignment
                         foreach (SafeEntry i in x.SafeEntryList)
                         {
                             Console.WriteLine();
-                            Console.WriteLine("Business Location Name: {0}", i.Location.BusinessName);
-                            Console.WriteLine("Branch code: {0}", i.Location.BranchCode);
-                            Console.WriteLine("Check-in: {0}", i.CheckIn);
-                            if (i.CheckOut == DateTime.MinValue)
-                            {
-                                Console.WriteLine("Check-out: {0}", "Pending...");
-                            }
-                            else
-                                Console.WriteLine("Check-out: {0}", i.CheckOut);
+                            Console.WriteLine(i.ToString());
                         }
                     }
 

@@ -54,5 +54,10 @@ namespace PRG2_Assignment
             }
             return false;
         }
+
+        public override string ToString()
+        {
+            return "Serial number: " + SerialNo + "\nCollection location: " + CollectionLocation + "\nExpiry date: " + ExpiryDate;
+        }
     }
 }
