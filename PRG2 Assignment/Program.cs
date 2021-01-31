@@ -139,39 +139,6 @@ namespace PRG2_Assignment
             }
         }
 
-        static void ListVisitors(List<Person> personList)
-        {
-            Console.WriteLine();
-            Console.WriteLine("Visitors");
-            Console.WriteLine("--------");
-            int count = 1;
-            
-            for (int i = 0; i < personList.Count; i++)
-            {
-
-                if (personList[i] is Visitor)
-                {
-                    Console.WriteLine("({0}) {1}", count, personList[i].Name);
-                    count++;
-                }
-            }
-            Console.WriteLine();
-        }
-
-        static List<BusinessLocation> LoadBusinesses(string[] businessLines)
-        {
-            List<BusinessLocation> businessList = new List<BusinessLocation>() { };
-            for (int i = 1; i < businessLines.Length; i++)
-            {
-                string[] data = businessLines[i].Split(',');
-                BusinessLocation newBL = new BusinessLocation(data[0], data[1], Convert.ToInt32(data[2]));
-                businessList.Add(newBL);
-            }
-
-            return businessList;
-        }
-
-
         static List<Person> LoadPerson(string[] personLines, List<SHNFacility> shnList)
         {
             List<Person> personList = new List<Person>() { };
@@ -202,7 +169,7 @@ namespace PRG2_Assignment
 
                             }
                         }
-                        
+
                         personList.Add(newres);
                     }
 
@@ -228,9 +195,6 @@ namespace PRG2_Assignment
                             if (shnList[x].faclilityName == data[14])
                             {
                                 newres.TravelEntryList[newres.TravelEntryList.Count - 1].AssignSHNFacility(shnList[x]);
-
-
-
                             }
                         }
                         personList.Add(newres);
@@ -275,6 +239,69 @@ namespace PRG2_Assignment
             return personList;
 
 
+        }
+
+        static List<BusinessLocation> LoadBusinesses(string[] businessLines)
+        {
+            List<BusinessLocation> businessList = new List<BusinessLocation>() { };
+            for (int i = 1; i < businessLines.Length; i++)
+            {
+                string[] data = businessLines[i].Split(',');
+                BusinessLocation newBL = new BusinessLocation(data[0], data[1], Convert.ToInt32(data[2]));
+                businessList.Add(newBL);
+            }
+
+            return businessList;
+        }
+
+        static void ListVisitors(List<Person> personList)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Visitors");
+            Console.WriteLine("--------");
+            int count = 1;
+            
+            for (int i = 0; i < personList.Count; i++)
+            {
+
+                if (personList[i] is Visitor)
+                {
+                    Console.WriteLine("({0}) {1}", count, personList[i].Name);
+                    count++;
+                }
+            }
+            Console.WriteLine();
+        }
+
+        static int DisplayMenu()
+        {
+
+            Console.WriteLine("=========================");
+            Console.WriteLine("Main   monitoring   menu");
+            Console.WriteLine("=========================");
+            Console.WriteLine();
+            List<string> choice = new List<string>() { "Exit the application", "Display all visitors",
+                "Display details for a person", "Assign/Replace TT Token", "Display business locations",
+                "Edit business location capacity", "SafeEntry Check-in", "SafeEntry Check-out", "List SHN Faclilties",
+                "Create Visitor", "Create TravelEntry Record", "Calculate SHN Charges", "Contact Tracing Reporting", "SHN Status Reporting"};
+
+            for (int x = 0; x < choice.Count; x++)
+            {
+                Console.WriteLine("({0}) {1}", x, choice[x]);
+            }
+            Console.Write("Enter choice: ");
+            try
+            {
+                int input = Convert.ToInt32(Console.ReadLine());
+                return input;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine();
+                Console.WriteLine("|ERROR| Wrong input! Please choose one of the options displayed above.");
+                Console.WriteLine();
+                return -123456;
+            }
         }
 
         static void ListPersonDetails(string name, List<Person> personList)
@@ -340,49 +367,77 @@ namespace PRG2_Assignment
             }
         }
 
-        static int DisplayMenu()
+        static void ReplaceTraceTogether(List<Person> personList)
         {
-
-            Console.WriteLine("=========================");
-            Console.WriteLine("Main   monitoring   menu");
-            Console.WriteLine("=========================");
             Console.WriteLine();
-            List<string> choice = new List<string>() { "Exit the application", "Display all visitors",
-                "Display details for a person", "Assign/Replace TT Token", "Display business locations",
-                "Edit business location capacity", "SafeEntry Check-in", "SafeEntry Check-out", "List SHN Faclilties",
-                "Create Visitor", "Create TravelEntry Record", "Calculate SHN Charges", "Contact Tracing Reporting", "SHN Status Reporting"};
+            Console.WriteLine("Replace TraceTogether token (For Residents)");
+            Console.Write("Enter name: ");
+            string resName = Console.ReadLine();
+            int found = 0;
 
-            for (int x = 0; x < choice.Count; x++)
+            foreach (Person x in personList)
             {
-                Console.WriteLine("({0}) {1}", x, choice[x]);
+                if (x is Resident && x.Name == resName)
+                {
+                    found++;
+                    Resident z = (Resident)x;
+                    if (z.Token is null)
+                    {
+                        Random r = new Random();
+                        string newSerialNo = r.Next(0, 1000000).ToString("D6");
+                        Console.WriteLine();
+                        Console.Write("Enter CC to collect token from: ");
+                        string newCollectionLoc = Console.ReadLine();
+
+                        z.Token = new TraceTogetherToken(newSerialNo, newCollectionLoc, DateTime.Now.AddMonths(6));
+                        Console.WriteLine();
+                        Console.WriteLine("Success! Token assigned.");
+                        Console.WriteLine("------------------------");
+                        Console.WriteLine(z.Token.ToString());
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        if (z.Token.IsEligibleForReplacement())
+                        {
+                            Random r = new Random();
+                            string newSerialNo = r.Next(0, 1000000).ToString("D6");
+                            Console.WriteLine();
+                            Console.Write("Enter CC to collect token from: ");
+                            string newCollectionLoc = Console.ReadLine();
+
+                            z.Token = new TraceTogetherToken(newSerialNo, newCollectionLoc, DateTime.Now.AddMonths(6));
+                            Console.WriteLine();
+                            Console.WriteLine("Success! Token replaced.");
+                            Console.WriteLine("------------------------");
+                            Console.WriteLine(z.Token.ToString());
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("|ERROR| Your token is not eligible for a replacement.");
+                            Console.WriteLine();
+                        }
+                    }
+                }
+                else if (x is Visitor && x.Name == resName)
+                {
+                    found++;
+                    Console.WriteLine();
+                    Console.WriteLine("|ERROR| Person is not a resident!");
+                    Console.WriteLine();
+                }
             }
-            Console.Write("Enter choice: ");
-            try
-            {
-                int input = Convert.ToInt32(Console.ReadLine());
-                return input;
-            }
-            catch (FormatException)
+            if (found == 0)
             {
                 Console.WriteLine();
-                Console.WriteLine("|ERROR| Wrong input! Please choose one of the options displayed above.");
+                Console.WriteLine("|ERROR| Invalid input! Enter the name of an existing person.");
                 Console.WriteLine();
-                return -123456;
             }
         }
 
-        static void ListSHN(List<SHNFacility> list)
-        {
-            Console.WriteLine();
-            Console.WriteLine("Facility");
-            Console.WriteLine("--------");
-            Console.WriteLine();
-            for (int i = 0; i < list.Count; i++)
-            {
-                Console.WriteLine("({0}) {1}", i+1,list[i].faclilityName);
-            }
-            Console.WriteLine();
-        }
+        
 
         static void ListBusinessLocations(List<BusinessLocation> list)
         {
@@ -600,7 +655,20 @@ namespace PRG2_Assignment
                 Console.WriteLine();
             }
         }
-       
+
+        static void ListSHN(List<SHNFacility> list)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Facility");
+            Console.WriteLine("--------");
+            Console.WriteLine();
+            for (int i = 0; i < list.Count; i++)
+            {
+                Console.WriteLine("({0}) {1}", i + 1, list[i].faclilityName);
+            }
+            Console.WriteLine();
+        }
+
 
         static void CreateVisitor(List<Person> personList)
         {
@@ -781,75 +849,7 @@ namespace PRG2_Assignment
 
 
 
-        static void ReplaceTraceTogether(List<Person> personList)
-        {
-            Console.WriteLine();
-            Console.WriteLine("Replace TraceTogether token (For Residents)");
-            Console.Write("Enter name: ");
-            string resName = Console.ReadLine();
-            int found = 0;
-
-            foreach (Person x in personList)
-            {
-                if (x is Resident && x.Name == resName)
-                {
-                    found++;
-                    Resident z = (Resident)x;
-                    if (z.Token is null)
-                    {
-                        Random r = new Random();
-                        string newSerialNo = r.Next(0, 1000000).ToString("D6");
-                        Console.WriteLine();
-                        Console.Write("Enter CC to collect token from: ");
-                        string newCollectionLoc = Console.ReadLine();
-
-                        z.Token = new TraceTogetherToken(newSerialNo, newCollectionLoc, DateTime.Now.AddMonths(6));
-                        Console.WriteLine();
-                        Console.WriteLine("Success! Token assigned.");
-                        Console.WriteLine("------------------------");
-                        Console.WriteLine(z.Token.ToString());
-                        Console.WriteLine();
-                    }
-                    else
-                    {
-                        if (z.Token.IsEligibleForReplacement())
-                        {
-                            Random r = new Random();
-                            string newSerialNo = r.Next(0, 1000000).ToString("D6");
-                            Console.WriteLine();
-                            Console.Write("Enter CC to collect token from: ");
-                            string newCollectionLoc = Console.ReadLine();
-
-                            z.Token = new TraceTogetherToken(newSerialNo, newCollectionLoc, DateTime.Now.AddMonths(6));
-                            Console.WriteLine();
-                            Console.WriteLine("Success! Token replaced.");
-                            Console.WriteLine("------------------------");
-                            Console.WriteLine(z.Token.ToString());
-                            Console.WriteLine();
-                        }
-                        else
-                        {
-                            Console.WriteLine();
-                            Console.WriteLine("|ERROR| Your token is not eligible for a replacement.");
-                            Console.WriteLine();
-                        }
-                    }
-                }
-                else if (x is Visitor && x.Name == resName)
-                {
-                    found++;
-                    Console.WriteLine();
-                    Console.WriteLine("|ERROR| Person is not a resident!");
-                    Console.WriteLine();
-                }
-            }
-            if (found == 0)
-            {
-                Console.WriteLine();
-                Console.WriteLine("|ERROR| Invalid input! Enter the name of an existing person.");
-                Console.WriteLine();
-            }
-        }
+       
 
         static void ContactTracingReporting(List<Person> personList, List<BusinessLocation> bList)
         {
