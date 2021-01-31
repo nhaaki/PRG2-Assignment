@@ -100,6 +100,10 @@ namespace PRG2_Assignment
                 {
                     CalculateSHNCharges(personList);
                 }
+                else if (input == 14)
+                {
+                    SHNStatusReporting(personList);
+                }
                 else
                 {
                     Console.WriteLine();
@@ -538,7 +542,7 @@ namespace PRG2_Assignment
                 string name = Convert.ToString(Console.ReadLine());
                 if (name == "")
                 {
-                    Console.WriteLine("Invalid Name. Please Try Again");
+                    Console.WriteLine("|ERROR| Invalid Name. Please Try Again");
                     break;
 
                 }
@@ -547,7 +551,7 @@ namespace PRG2_Assignment
                 string passportNo = Convert.ToString(Console.ReadLine());
                 if (passportNo == "")
                 {
-                    Console.WriteLine("Invalid PassportNo. Please Try Again");
+                    Console.WriteLine("|ERROR| Invalid PassportNo. Please Try Again");
                     break;
                 }
 
@@ -555,7 +559,7 @@ namespace PRG2_Assignment
                 string nationality = Convert.ToString(Console.ReadLine());
                 if (nationality == "")
                 {
-                    Console.WriteLine("Invalid Nationality. Please Try Again");
+                    Console.WriteLine("|ERROR| Invalid Nationality. Please Try Again");
                     break;
                 }
 
@@ -598,48 +602,61 @@ namespace PRG2_Assignment
                             string entrymode = Convert.ToString(Console.ReadLine());
                             entrymode = char.ToUpper(entrymode[0]) + entrymode.Substring(1);
 
-                            if (entrymode == "Land" | entrymode == "Sea" | entrymode == "Air")
+                            if (entrymode == "Land" || entrymode == "Sea" || entrymode == "Air")
                             {
-                                DateTime entrydate = DateTime.Today.AddDays(-1);
+                                DateTime entrydate = DateTime.Now;
                                 TravelEntry newtravelentry = new TravelEntry(lcoe, entrymode, entrydate);
                                 newtravelentry.CalculateSHNDuration();
 
 
-                                while (true)
+                                if(lcoe != "Vietnam" && lcoe != "New Zealand")
                                 {
-                                    Console.WriteLine();
-                                    Console.WriteLine("Facility");
-                                    Console.WriteLine("--------");
-                                    for (int i = 0; i < list.Count; i++)
+                                    while (true)
                                     {
-                                        Console.WriteLine("[" + (i + 1) + "]" + list[i].faclilityName);
-                                    }
+                                        Console.WriteLine();
+                                        Console.WriteLine("Facility");
+                                        Console.WriteLine("--------");
+                                        for (int i = 0; i < list.Count; i++)
+                                        {
+                                            Console.WriteLine("[" + (i + 1) + "]" + list[i].faclilityName);
+                                        }
 
-                                    Console.Write("Enter Your SHN Facility Choice: ");
-                                    int shnchoice = Convert.ToInt32(Console.ReadLine());
+                                        Console.Write("Enter Your SHN Facility Choice: ");
+                                        int shnchoice = Convert.ToInt32(Console.ReadLine());
 
-                                    if (list[shnchoice - 1].facilityVacancy < 0)
-                                    {
-                                        Console.WriteLine("The chosen SHN Facility is full");
-                                    }
-                                    else
-                                    {
-                                        newtravelentry.AssignSHNFacility(list[shnchoice - 1]);
-                                        list[shnchoice - 1].facilityVacancy = list[shnchoice - 1].facilityVacancy - 1;
-                                        break;
-                                    }
+                                        if (list[shnchoice - 1].facilityVacancy < 0)
+                                        {
+                                            Console.WriteLine("The chosen SHN Facility is full");
+                                        }
+                                        else
+                                        {
+                                            newtravelentry.AssignSHNFacility(list[shnchoice - 1]);
+                                            list[shnchoice - 1].facilityVacancy = list[shnchoice - 1].facilityVacancy - 1;
+                                            break;
+                                        }
+                                        
 
+                                    }
+                                    Console.WriteLine("Your Travel Entry Record has been created");
+                                    x.AddTravelEntry(newtravelentry);
+                                    success = true;
+
+                                    break;
                                 }
-                                Console.WriteLine("Your Travel Entry Record has been created");
-                                x.AddTravelEntry(newtravelentry);
-                                success = true;
+                                else
+                                {
+                                    Console.WriteLine("Your Travel Entry Record has been created");
+                                    x.AddTravelEntry(newtravelentry);
+                                    success = true;
 
-                                break;
+                                    break;
+                                }
+                                
 
                             }
                             else
                             {
-                                Console.WriteLine("Please enter a valid Entry Mode");
+                                Console.WriteLine("|ERROR| Please enter a valid Entry Mode");
                             }
 
                         }
@@ -654,7 +671,7 @@ namespace PRG2_Assignment
             }
             if(success is false)
             {
-                Console.WriteLine("Name entered is not valid");
+                Console.WriteLine("|ERROR| Name entered is not valid");
             }
 
 
@@ -673,7 +690,7 @@ namespace PRG2_Assignment
                 if (x.Name == name)
                 {
 
-                    if (x.TravelEntryList[x.TravelEntryList.Count - 1].shnEndDate < DateTime.Today && x.TravelEntryList[x.TravelEntryList.Count - 1].isPaid == false)
+                    if (x.TravelEntryList[x.TravelEntryList.Count - 1].shnEndDate < DateTime.Now && x.TravelEntryList[x.TravelEntryList.Count - 1].isPaid == false)
                     {
                         double cost = x.CalculateSHNCharges();
                         Console.WriteLine("Your total cost is $" + cost);
@@ -698,7 +715,7 @@ namespace PRG2_Assignment
 
             if(success is false)
             {
-                Console.WriteLine("The Name entered either is not valid or did not stay at an SHN Faclility. Please Try Again");
+                Console.WriteLine("|ERROR| The Name entered either is not valid or did not stay at an SHN Faclility. Please Try Again");
             }
 
 
@@ -762,6 +779,38 @@ namespace PRG2_Assignment
                 Console.WriteLine();
                 Console.WriteLine("|ERROR| Invalid input! Enter the name of an exisiting person.");
             }
+        }
+
+        static void SHNStatusReporting(List<Person> personList)
+        {
+            try
+            {
+                Console.Write("Enter a Date");
+                DateTime date = Convert.ToDateTime(Console.ReadLine());
+                foreach (Person x in personList)
+                {
+                    if (x.TravelEntryList.Count > 0)
+                    {
+                        if (x.TravelEntryList[x.TravelEntryList.Count - 1].entryDate == date)
+                        {
+                            File.WriteAllText("reportshn.csv", string.Empty);
+                            using (StreamWriter sw = new StreamWriter("reportshn.csv", true))
+                            {
+                                sw.WriteLine("Name,EntryMode,SHNEndDate,SHNFaclility");
+                                sw.WriteLine(x.Name + "," + x.TravelEntryList[x.TravelEntryList.Count - 1].entryDate + "," + x.TravelEntryList[x.TravelEntryList.Count - 1].shnEndDate + "," + x.TravelEntryList[x.TravelEntryList.Count - 1].shnStay);
+                            }
+
+                        }
+                    }
+
+                }
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("|ERROR| Invalid input! Enter a DateTime");
+                Console.WriteLine();
+            }
+
         }
 
 
