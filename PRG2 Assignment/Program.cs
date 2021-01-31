@@ -350,7 +350,7 @@ namespace PRG2_Assignment
             List<string> choice = new List<string>() { "Exit the application", "Display all visitors",
                 "Display details for a person", "Assign/Replace TT Token", "Display business locations",
                 "Edit business location capacity", "SafeEntry Check-in", "SafeEntry Check-out", "List SHN Faclilties",
-                "Create Visitor", "Create TravelEntry Record", "Calculate SHN Charges", "Contact Tracing Reporing", "SHN Status Reporting"};
+                "Create Visitor", "Create TravelEntry Record", "Calculate SHN Charges", "Contact Tracing Reporting", "SHN Status Reporting"};
 
             for (int x = 0; x < choice.Count; x++)
             {
@@ -855,22 +855,11 @@ namespace PRG2_Assignment
         {
             try
             {
+                bool found = false;
                 Console.WriteLine();
                 Console.Write("Enter a business location (eg. Cheap Goods Shop): ");
                 string location = Console.ReadLine();
-                Console.Write("Enter a datetime value (eg. '28/01/21 08:00'): ");
-                DateTime date = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yy HH:mm", CultureInfo.InvariantCulture);
-
-
-                File.WriteAllText("reportContactTracing.csv", string.Empty);
-                using (StreamWriter sw = new StreamWriter("reportContactTracing.csv", false))
-                {
-                    sw.WriteLine("Name,Check-in time,Check-out time");
-                }
-
-                Boolean found = false;
                 BusinessLocation locationItem = new BusinessLocation();
-
                 foreach (BusinessLocation z in bList)
                 {
                     if (location == z.BusinessName)
@@ -884,9 +873,21 @@ namespace PRG2_Assignment
                 {
                     Console.WriteLine();
                     Console.WriteLine("|ERROR| Business not found! Enter the name of the business with proper spelling. ");
+                    Console.WriteLine();
+                    
                 }
                 else
                 {
+                    Console.Write("Enter a datetime value (eg. '28/01/21 08:00'): ");
+                    DateTime date = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yy HH:mm", CultureInfo.InvariantCulture);
+
+
+                    File.WriteAllText("reportContactTracing.csv", string.Empty);
+                    using (StreamWriter sw = new StreamWriter("reportContactTracing.csv", false))
+                    {
+                        sw.WriteLine("Name,Check-in time,Check-out time");
+                    }
+
                     foreach (Person x in personList)
                     {
                         if (x.SafeEntryList.Count > 0)
@@ -925,7 +926,8 @@ namespace PRG2_Assignment
             }
             catch (FormatException)
             {
-                Console.WriteLine("|ERROR| Invalid input! Enter a DateTime");
+                Console.WriteLine();
+                Console.WriteLine("|ERROR| Invalid input! Enter a DateTime value as shown above.");
                 Console.WriteLine();
             }
         }
