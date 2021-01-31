@@ -539,7 +539,7 @@ namespace PRG2_Assignment
                             SafeEntry seObject = new SafeEntry(DateTime.Now, chosen);
                             chosen.VisitorsNow++;
 
-                            chosenPerson.SafeEntryList.Add(seObject);
+                            chosenPerson.AddSafeEntry(seObject);
                             Console.WriteLine();
                             Console.WriteLine("SafeEntry successful!");
                             Console.WriteLine();

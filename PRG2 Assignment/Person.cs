@@ -31,6 +31,11 @@ namespace PRG2_Assignment
             TravelEntryList.Add(travelEntry);
         }
 
+        public void AddSafeEntry(SafeEntry safeEntry)
+        {
+            SafeEntryList.Add(safeEntry);
+        }
+
         public abstract double CalculateSHNCharges();
 
         public override string ToString()
