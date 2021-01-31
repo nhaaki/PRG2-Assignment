@@ -62,45 +62,45 @@ namespace PRG2_Assignment
                 }
                 else if (input == 3)
                 {
-                    CreateVisitor(personList);
+                    ReplaceTraceTogether(personList);
                 }
                 else if (input == 4)
                 {
-                    ReplaceTraceTogether(personList);
+                    ListBusinessLocations(businessList);
                 }
                 else if (input == 5)
                 {
-                    ListBusinessLocations(businessList);
+                    EditBL(businessList);
                 }
                 else if (input == 6)
                 {
-                    EditBL(businessList);
+                    SafeEntryCheckIn(personList, businessList);
                 }
                 else if (input == 7)
                 {
-                    SafeEntryCheckIn(personList, businessList);
+                    SafeEntryCheckOut(personList, businessList);
                 }
                 else if (input == 8)
                 {
-                    SafeEntryCheckOut(personList);
+                    ListSHN(shnList);
                 }
                 else if (input == 9)
                 {
-                    ListSHN(shnList);
+                    CreateVisitor(personList);
                 }
                 else if (input == 10)
                 {
-                    CreateVisitor(personList);
+                    CreateTravelEntryRecord(personList, shnList);
                 }
                 else if (input == 11)
                 {
-                    CreateTravelEntryRecord(personList, shnList);
+                    CalculateSHNCharges(personList);
                 }
                 else if (input == 12)
                 {
-                    CalculateSHNCharges(personList);
+                    ContactTracingReporting(personList, businessList);
                 }
-                else if (input == 14)
+                else if (input == 13)
                 {
                     SHNStatusReporting(personList);
                 }
@@ -145,17 +145,17 @@ namespace PRG2_Assignment
             Console.WriteLine("Visitors");
             Console.WriteLine("--------");
             int count = 1;
+            
             for (int i = 0; i < personList.Count; i++)
             {
 
                 if (personList[i] is Visitor)
                 {
-
                     Console.WriteLine("({0}) {1}", count, personList[i].Name);
                     count++;
-
                 }
             }
+            Console.WriteLine();
         }
 
         static List<BusinessLocation> LoadBusinesses(string[] businessLines)
@@ -329,6 +329,7 @@ namespace PRG2_Assignment
                             Console.WriteLine("Faclility Name: {0}", x.TravelEntryList[x.TravelEntryList.Count - 1].shnStay.faclilityName);
                         }
                     }
+                    Console.WriteLine();
                 }
             }
             if (found == 0)
@@ -347,9 +348,9 @@ namespace PRG2_Assignment
             Console.WriteLine("=========================");
             Console.WriteLine();
             List<string> choice = new List<string>() { "Exit the application", "Display all visitors",
-                "Display details for a person", "Create visitor", "Assign/Replace TT Token", "Display business locations",
+                "Display details for a person", "Assign/Replace TT Token", "Display business locations",
                 "Edit business location capacity", "SafeEntry Check-in", "SafeEntry Check-out", "List SHN Faclilties",
-                "Create Visitor", "Create TravelEntry Record", "Calculate SHN Charges"};
+                "Create Visitor", "Create TravelEntry Record", "Calculate SHN Charges", "Contact Tracing Reporing", "SHN Status Reporting"};
 
             for (int x = 0; x < choice.Count; x++)
             {
@@ -435,6 +436,7 @@ namespace PRG2_Assignment
             Console.Write("Enter name: ");
             string name = Console.ReadLine();
             int found = 0;
+            
             Person chosenPerson = personList[0];
 
             foreach (Person x in personList)
@@ -449,6 +451,7 @@ namespace PRG2_Assignment
             {
                 Console.WriteLine();
                 Console.WriteLine("|ERROR| Person not found!");
+                Console.WriteLine();
             }
             else
             {
@@ -456,16 +459,33 @@ namespace PRG2_Assignment
                 Console.Write("Enter choice [1-4]: ");
                 try
                 {
+                    Boolean asda = false;
                     BusinessLocation chosen = bList[Convert.ToInt32(Console.ReadLine()) - 1];
                     if (chosen.VisitorsNow != chosen.MaximumCapacity)
                     {
-                        SafeEntry seObject = new SafeEntry(DateTime.Now, chosen);
-                        chosen.VisitorsNow++;
+                        if (chosenPerson.SafeEntryList.Count != 0)
+                        {
+                            foreach (SafeEntry x in chosenPerson.SafeEntryList)
+                            {
+                                if (x.Location == chosen && x.CheckOut == DateTime.MinValue)
+                                {
+                                    Console.WriteLine();
+                                    Console.WriteLine("|ERROR| Check out before using SafeEntry for this location!");
+                                    Console.WriteLine();
+                                    asda = true;
+                                }
+                            }
+                        }
+                        if (asda is false)
+                        {
+                            SafeEntry seObject = new SafeEntry(DateTime.Now, chosen);
+                            chosen.VisitorsNow++;
 
-                        chosenPerson.SafeEntryList.Add(seObject);
-                        Console.WriteLine();
-                        Console.WriteLine("SafeEntry successful!");
-                        Console.WriteLine();
+                            chosenPerson.SafeEntryList.Add(seObject);
+                            Console.WriteLine();
+                            Console.WriteLine("SafeEntry successful!");
+                            Console.WriteLine();
+                        }
                     }
                     else
                     {
@@ -492,8 +512,10 @@ namespace PRG2_Assignment
             }
         }
 
-        static void SafeEntryCheckOut(List<Person> personList)
+        static void SafeEntryCheckOut(List<Person> personList, List<BusinessLocation> bList)
         {
+            bool found = false;
+            bool locationFound = false;
             Console.WriteLine();
             Console.WriteLine("SafeEntry Check-out");
             Console.WriteLine("-------------------");
@@ -506,32 +528,76 @@ namespace PRG2_Assignment
             {
                 if (x.Name == name)
                 {
-                    foreach (SafeEntry y in x.SafeEntryList)
+                    found = true;
+                    if (x.SafeEntryList.Count != 0)
                     {
-                        if (y.CheckOut == DateTime.MinValue)
+                        int asda = 0;
+                        foreach (SafeEntry y in x.SafeEntryList)
                         {
-                            Console.WriteLine(">>");
-                            Console.WriteLine(y.ToString());
+                            if (y.CheckOut == DateTime.MinValue)
+                            {
+                                Console.WriteLine(">>");
+                                Console.WriteLine(y.ToString());
+                                Console.WriteLine();
+                            }
+                            else
+                                asda++;
+                        }
+
+                        if (asda == x.SafeEntryList.Count)
+                        {
+                            Console.WriteLine("|ERROR| No SafeEntry records that need checking out.");
+                            Console.WriteLine();
+                            return;
+                        }
+
+                        Console.Write("Enter name of business: ");
+                        string businessLocation = Console.ReadLine();
+
+                        foreach (SafeEntry z in x.SafeEntryList)
+                        {
+                            if (z.Location.BusinessName == businessLocation)
+                            {
+                                locationFound = true;
+                                z.CheckOut = DateTime.Now;
+                                foreach (BusinessLocation bl in bList)
+                                {
+                                    if (bl == z.Location)
+                                    {
+                                        bl.VisitorsNow -=1;
+                                    }
+                                }
+                                
+                            }
+                        }
+                        if (locationFound is false)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("|ERROR| Business not found! Check your spelling.");
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Successfully checked out!");
                             Console.WriteLine();
                         }
                     }
-
-                    Console.Write("Enter name of business to check-out: ");
-                    string bname = Console.ReadLine();
-
-                    foreach (SafeEntry z in x.SafeEntryList)
+                    else
                     {
-                        if (z.Location.BusinessName == bname)
-                        {
-                            z.CheckOut = DateTime.Now;
-                        }
+                        Console.WriteLine("|ERROR| This person does not have any SafeEntry records.");
+                        Console.WriteLine();
                     }
-                    Console.WriteLine();
-                    Console.WriteLine("Successfully checked out!");
-                    Console.WriteLine();
                 }
             }
+            if (found == false)
+            {
+                Console.WriteLine();
+                Console.WriteLine("|ERROR| Person not found! Check your spelling.");
+                Console.WriteLine();
+            }
         }
+       
 
         static void CreateVisitor(List<Person> personList)
         {
@@ -566,16 +632,7 @@ namespace PRG2_Assignment
                 Visitor newvisitor = new Visitor(name, passportNo, nationality);
                 personList.Add(newvisitor);
                 break;
-
-
-
             }
-            
-            
-            
-
-
-            
         }
 
         static void CreateTravelEntryRecord(List<Person> personList, List<SHNFacility> list)
@@ -651,8 +708,6 @@ namespace PRG2_Assignment
 
                                     break;
                                 }
-                                
-
                             }
                             else
                             {
@@ -665,16 +720,12 @@ namespace PRG2_Assignment
                     {
                         Console.WriteLine("|ERROR| Input not valid");
                     }
-
                 }
-
             }
             if(success is false)
             {
                 Console.WriteLine("|ERROR| Name entered is not valid");
             }
-
-
         }
 
         static void CalculateSHNCharges(List<Person> personList)
@@ -717,10 +768,9 @@ namespace PRG2_Assignment
             {
                 Console.WriteLine("|ERROR| The Name entered either is not valid or did not stay at an SHN Faclility. Please Try Again");
             }
-
-
-
         }
+
+
 
         static void ReplaceTraceTogether(List<Person> personList)
         {
@@ -745,6 +795,11 @@ namespace PRG2_Assignment
                         string newCollectionLoc = Console.ReadLine();
 
                         z.Token = new TraceTogetherToken(newSerialNo, newCollectionLoc, DateTime.Now.AddMonths(6));
+                        Console.WriteLine();
+                        Console.WriteLine("Success! Token assigned.");
+                        Console.WriteLine("------------------------");
+                        Console.WriteLine(z.Token.ToString());
+                        Console.WriteLine();
                     }
                     else
                     {
@@ -757,11 +812,16 @@ namespace PRG2_Assignment
                             string newCollectionLoc = Console.ReadLine();
 
                             z.Token = new TraceTogetherToken(newSerialNo, newCollectionLoc, DateTime.Now.AddMonths(6));
+                            Console.WriteLine();
+                            Console.WriteLine("Success! Token replaced.");
+                            Console.WriteLine("------------------------");
+                            Console.WriteLine(z.Token.ToString());
+                            Console.WriteLine();
                         }
                         else
                         {
                             Console.WriteLine();
-                            Console.WriteLine("Your token is not eligible for a replacement.");
+                            Console.WriteLine("|ERROR| Your token is not eligible for a replacement.");
                             Console.WriteLine();
                         }
                     }
@@ -777,7 +837,83 @@ namespace PRG2_Assignment
             if (found == 0)
             {
                 Console.WriteLine();
-                Console.WriteLine("|ERROR| Invalid input! Enter the name of an exisiting person.");
+                Console.WriteLine("|ERROR| Invalid input! Enter the name of an existing person.");
+                Console.WriteLine();
+            }
+        }
+
+        static void ContactTracingReporting(List<Person> personList, List<BusinessLocation> bList)
+        {
+            try
+            {
+                Console.WriteLine();
+                Console.Write("Enter a business location (eg. Cheap Goods Shop): ");
+                string location = Console.ReadLine();
+                Console.Write("Enter a datetime value (eg. '28/01/21 08:00'): ");
+                DateTime date = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yy HH:mm", CultureInfo.InvariantCulture);
+
+
+                File.WriteAllText("reportContactTracing.csv", string.Empty);
+                using (StreamWriter sw = new StreamWriter("reportContactTracing.csv", false))
+                {
+                    sw.WriteLine("Name,Check-in time,Check-out time");
+                }
+
+                Boolean found = false;
+                BusinessLocation locationItem = new BusinessLocation();
+
+                foreach (BusinessLocation z in bList)
+                {
+                    if (location == z.BusinessName)
+                    {
+                        found = true;
+                        locationItem = z;
+                    }
+                }
+
+                if (found == false)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("|ERROR| Business not found! Enter the name of the business with proper spelling. ");
+                }
+                else
+                {
+                    foreach (Person x in personList)
+                    {
+                        if (x.SafeEntryList.Count > 0)
+                        {
+                            foreach (SafeEntry se in x.SafeEntryList)
+                            {
+                                if (se.Location == locationItem)
+                                {
+                                    if (DateTime.Compare(date, se.CheckIn) >= 0 && (DateTime.Compare(date, se.CheckOut) <= 0 || se.CheckOut == DateTime.MinValue))
+                                    {
+                                        if (se.CheckOut == DateTime.MinValue)
+                                        {
+                                            using (StreamWriter sw = new StreamWriter("reportContactTracing.csv", true))
+                                            {
+                                                sw.WriteLine(x.Name + "," + se.CheckIn + ",Pending");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            using (StreamWriter sw = new StreamWriter("reportContactTracing.csv", true))
+                                            {
+                                                sw.WriteLine(x.Name + "," + se.CheckIn + "," + se.CheckOut);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("|ERROR| Invalid input! Enter a DateTime");
+                Console.WriteLine();
             }
         }
 
@@ -810,12 +946,7 @@ namespace PRG2_Assignment
                 Console.WriteLine("|ERROR| Invalid input! Enter a DateTime");
                 Console.WriteLine();
             }
-
         }
-
-
-
-
     }
 }
 
