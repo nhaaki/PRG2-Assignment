@@ -607,33 +607,39 @@ namespace PRG2_Assignment
 
             while (true)
             {
-                Console.Write("Enter Your Name: ");
+                Console.WriteLine();
+                Console.Write("Enter your name: ");
                 string name = Convert.ToString(Console.ReadLine());
                 if (name == "")
                 {
                     Console.WriteLine("|ERROR| Invalid Name. Please Try Again");
-                    break;
-
+                    continue;
                 }
+                
 
-                Console.Write("Enter Your Passport No.: ");
+                Console.WriteLine();
+                Console.Write("Enter your passport number: ");
                 string passportNo = Convert.ToString(Console.ReadLine());
                 if (passportNo == "")
                 {
                     Console.WriteLine("|ERROR| Invalid PassportNo. Please Try Again");
-                    break;
+                    continue;
                 }
 
-                Console.Write("Enter Your Nationality: ");
+                Console.WriteLine();
+                Console.Write("Enter your nationality: ");
                 string nationality = Convert.ToString(Console.ReadLine());
                 if (nationality == "")
                 {
                     Console.WriteLine("|ERROR| Invalid Nationality. Please Try Again");
-                    break;
+                    continue;
                 }
 
                 Visitor newvisitor = new Visitor(name, passportNo, nationality);
                 personList.Add(newvisitor);
+                Console.WriteLine();
+                Console.WriteLine("Visitor successfully created!");
+                Console.WriteLine();
                 break;
             }
         }
@@ -910,6 +916,10 @@ namespace PRG2_Assignment
                             }
                         }
                     }
+
+                    Console.WriteLine();
+                    Console.WriteLine("Report successfully generated!");
+                    Console.WriteLine();
                 }
                 
             }
