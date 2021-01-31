@@ -531,15 +531,47 @@ namespace PRG2_Assignment
 
         static void CreateVisitor(List<Person> personList)
         {
-            Console.Write("Enter Your Name: ");
-            string name = Convert.ToString(Console.ReadLine());
-            Console.Write("Enter Your Passport No.: ");
-            string passportNo = Convert.ToString(Console.ReadLine());
-            Console.Write("Enter Your Nationality: ");
-            string nationality = Convert.ToString(Console.ReadLine());
 
-            Visitor newvisitor = new Visitor(name, passportNo, nationality);
-            personList.Add(newvisitor);
+            while (true)
+            {
+                Console.Write("Enter Your Name: ");
+                string name = Convert.ToString(Console.ReadLine());
+                if (name == "")
+                {
+                    Console.WriteLine("Invalid Name. Please Try Again");
+                    break;
+
+                }
+
+                Console.Write("Enter Your Passport No.: ");
+                string passportNo = Convert.ToString(Console.ReadLine());
+                if (passportNo == "")
+                {
+                    Console.WriteLine("Invalid PassportNo. Please Try Again");
+                    break;
+                }
+
+                Console.Write("Enter Your Nationality: ");
+                string nationality = Convert.ToString(Console.ReadLine());
+                if (nationality == "")
+                {
+                    Console.WriteLine("Invalid Nationality. Please Try Again");
+                    break;
+                }
+
+                Visitor newvisitor = new Visitor(name, passportNo, nationality);
+                personList.Add(newvisitor);
+                break;
+
+
+
+            }
+            
+            
+            
+
+
+            
         }
 
         static void CreateTravelEntryRecord(List<Person> personList, List<SHNFacility> list)
@@ -731,6 +763,8 @@ namespace PRG2_Assignment
                 Console.WriteLine("|ERROR| Invalid input! Enter the name of an exisiting person.");
             }
         }
+
+
 
 
     }
