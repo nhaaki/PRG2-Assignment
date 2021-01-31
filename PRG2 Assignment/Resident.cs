@@ -58,7 +58,7 @@ namespace PRG2_Assignment
 
         public override string ToString()
         {
-            return base.ToString() + "\nAddress: " + Address + "\nLast left country: " + LastLeftCountry.ToString("dd/MM/yyyy");
+            return base.ToString() + "\nType: Resident" + "\nAddress: " + Address + "\nLast left country: " + LastLeftCountry.ToString("dd/MM/yyyy");
         }
     }
 }
