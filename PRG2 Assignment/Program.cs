@@ -844,6 +844,7 @@ namespace PRG2_Assignment
             if(success is false)
             {
                 Console.WriteLine("|ERROR| The Name entered either is not valid or did not stay at an SHN Faclility. Please Try Again");
+                Console.WriteLine();
             }
         }
 
@@ -936,20 +937,28 @@ namespace PRG2_Assignment
         {
             try
             {
-                Console.Write("Enter a Date");
+                Console.Write("Enter a Date: ");
                 DateTime date = Convert.ToDateTime(Console.ReadLine());
+                File.WriteAllText("reportshn.csv", string.Empty);
+                using (StreamWriter sw = new StreamWriter("reportshn.csv", true))
+                {
+                    sw.WriteLine("Name,EntryMode,SHNEndDate,SHNFaclility");
+
+                }
                 foreach (Person x in personList)
                 {
                     if (x.TravelEntryList.Count > 0)
                     {
-                        if (x.TravelEntryList[x.TravelEntryList.Count - 1].entryDate == date)
+                        if (x.TravelEntryList[x.TravelEntryList.Count - 1].entryDate.ToString("dd/MM/yyyy") == date.ToString("dd/MM/yyyy")) 
                         {
-                            File.WriteAllText("reportshn.csv", string.Empty);
+                            
+                            
                             using (StreamWriter sw = new StreamWriter("reportshn.csv", true))
                             {
-                                sw.WriteLine("Name,EntryMode,SHNEndDate,SHNFaclility");
-                                sw.WriteLine(x.Name + "," + x.TravelEntryList[x.TravelEntryList.Count - 1].entryDate + "," + x.TravelEntryList[x.TravelEntryList.Count - 1].shnEndDate + "," + x.TravelEntryList[x.TravelEntryList.Count - 1].shnStay);
+                                
+                                sw.WriteLine(x.Name + "," + x.TravelEntryList[x.TravelEntryList.Count - 1].entryDate + "," + x.TravelEntryList[x.TravelEntryList.Count - 1].shnEndDate + "," + x.TravelEntryList[x.TravelEntryList.Count - 1].shnStay.faclilityName);
                             }
+                            
 
                         }
                     }
