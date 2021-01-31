@@ -373,12 +373,15 @@ namespace PRG2_Assignment
 
         static void ListSHN(List<SHNFacility> list)
         {
+            Console.WriteLine();
             Console.WriteLine("Facility");
             Console.WriteLine("--------");
+            Console.WriteLine();
             for (int i = 0; i < list.Count; i++)
             {
-                Console.WriteLine(list[i].faclilityName);
+                Console.WriteLine("({0}) {1}", i+1,list[i].faclilityName);
             }
+            Console.WriteLine();
         }
 
         static void ListBusinessLocations(List<BusinessLocation> list)
